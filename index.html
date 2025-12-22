@@ -82,7 +82,7 @@
         .welcome-card::after { content: ''; display: block; height: 10px; background-color: var(--senac-dark-blue); border-radius: 0 0 16px 16px; margin: 40px -40px -40px -40px; }
         .welcome-title { font-size: 2rem; font-weight: 900; color: var(--senac-dark-blue); border-bottom: 3px solid var(--senac-orange); padding-bottom: 10px; margin-bottom: 20px; }
         
-        /* FLUXOGRAMA */
+        /* FLUXOGRAMA & ARTES (Ajustado conforme solicitado) */
         .timeline-container { position: relative; padding: 40px 0; }
         .timeline-line::before { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 4px; background: #e2e8f0; transform: translateX(-50%); z-index: 0; }
         .timeline-step { display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; position: relative; }
@@ -96,12 +96,40 @@
         .border-left-green { border-left: 4px solid var(--senac-green); } .border-right-green { border-right: 4px solid var(--senac-green); text-align: right; }
         .empty-space { width: 45%; }
         
-        .timeline-art { position: absolute; z-index: 5; width: 250px; background: var(--senac-blue); color: white; border-radius: 8px; padding: 25px 20px; border-left: 6px solid var(--senac-orange); cursor: pointer; text-decoration: none; transition: transform 0.3s; }
-        .timeline-art:hover { transform: scale(1.05); z-index: 20; }
-        .timeline-art.art-1 { top: 250px; left: -300px; transform: rotate(-7deg); } .timeline-art.art-2 { top: 750px; right: -300px; transform: rotate(10deg); }
-        .timeline-art.art-3 { top: 1300px; left: -300px; transform: rotate(-4deg); } .timeline-art.art-4 { top: 1850px; right: -300px; transform: rotate(5deg); }
-        .art-title { font-weight: 900; font-size: 1.1rem; text-transform: uppercase; margin-bottom: 5px; } .art-desc { font-size: 0.8rem; }
-        
+        /* ARTES FLUTUANTES - Restauração do tamanho original solicitado */
+        .timeline-art { 
+            position: absolute; 
+            z-index: 5; 
+            width: 250px; 
+            height: auto; 
+            min-height: 200px;
+            background: var(--senac-blue); 
+            color: white; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border-radius: 8px; 
+            overflow: hidden; 
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; 
+            padding: 25px 20px; 
+            transition: transform 0.3s;
+            font-family: 'Roboto', 'Arial', sans-serif; 
+            text-decoration: none !important;
+            cursor: pointer; 
+            border-left: 6px solid var(--senac-orange);
+        }
+        .timeline-art:hover { transform: scale(1.05) rotate(0deg) !important; z-index: 20; box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
+        .art-content { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; position: relative; }
+        .art-coat { position: absolute; bottom: -15px; right: -10px; width: 40px; opacity: 0.3; }
+        .art-title { font-weight: 900; font-size: 1.1rem; text-transform: uppercase; margin-bottom: 5px; line-height: 1.2; color: white; text-align: left; }
+        .art-subtitle { font-weight: 700; color: var(--senac-orange); margin-bottom: 12px; font-size: 0.9rem; text-transform: uppercase; text-align: left; }
+        .art-desc { font-size: 0.8rem; line-height: 1.4; color: #e2e8f0; font-weight: 300; text-align: left; margin-bottom: 10px; }
+
+        .timeline-art.art-1 { top: 250px; left: -300px; transform: rotate(-7deg); }
+        .timeline-art.art-2 { top: 750px; right: -300px; left: auto; transform: rotate(10deg); }
+        .timeline-art.art-3 { top: 1300px; left: -300px; transform: rotate(-4deg); }
+        .timeline-art.art-4 { top: 1850px; right: -300px; left: auto; transform: rotate(5deg); }
+
         /* MODAIS DO SITE */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); opacity: 0; visibility: hidden; transition: 0.3s; }
         .modal-overlay.active { opacity: 1; visibility: visible; }
@@ -144,7 +172,6 @@
         /* =========================================
            ESTILOS DO PAINEL BI (DADOS) - INTEGRADO
            ========================================= */
-        /* Estilos do Tailwind sem Preflight para não quebrar o site */
         .text-senac-blue { color: var(--senac-blue); }
         .text-senac-orange { color: var(--senac-orange); }
         .bg-senac-blue { background-color: var(--senac-blue); }
@@ -163,7 +190,6 @@
         .money-input { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 12px; font-weight: 600; color: #0f172a; width: 100%; transition: all 0.2s; }
         .money-input:focus { border-color: var(--senac-blue); outline: none; background: white; box-shadow: 0 0 0 3px rgba(0, 69, 135, 0.1); }
 
-        /* Scrollbar fina para o BI */
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
@@ -251,10 +277,9 @@
             </div>
 
             <!-- ABA: DADOS (PAINEL BI INTEGRADO) -->
-            <!-- Importante: Container relativo e com altura definida para acomodar o BI absoluto -->
             <div id="view-dados" class="hidden-section w-full h-[800px] relative rounded-xl overflow-hidden border border-slate-200 shadow-lg bg-slate-50 font-sans">
                 
-                <!-- LOGIN DO BI (Sobreposto dentro da aba Dados) -->
+                <!-- LOGIN DO BI -->
                 <div id="bi-login-page" class="absolute inset-0 z-[60] flex items-center justify-center bg-slate-100 font-sans">
                     <div class="absolute inset-0 overflow-hidden">
                         <div class="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-blue-900/5 blur-3xl"></div>
@@ -292,7 +317,7 @@
                     </div>
                 </div>
 
-                <!-- APLICAÇÃO BI (Oculta até login) -->
+                <!-- APLICAÇÃO BI -->
                 <div id="bi-app-container" class="hidden flex-col h-full w-full bg-slate-50">
                     <header class="bg-white border-b border-slate-200 flex-shrink-0 z-30 shadow-sm flex flex-col">
                         <div class="h-16 flex items-center justify-between px-8">
@@ -350,7 +375,20 @@
                                             <h3 class="font-bold text-slate-700 text-sm m-0">Detalhamento</h3>
                                             <button onclick="exportBiReport()" class="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-lg text-xs font-bold"><i data-lucide="download" class="w-4 h-4"></i> Excel</button>
                                         </div>
-                                        <div class="flex-1 overflow-auto custom-scrollbar"><table class="w-full text-left border-collapse"><tbody id="biTableBody" class="divide-y divide-slate-100 text-sm"></tbody></table></div>
+                                        <div class="flex-1 overflow-auto custom-scrollbar">
+                                            <table class="w-full text-left border-collapse">
+                                                <thead class="bg-slate-50 sticky top-0 z-10 text-[10px] uppercase text-slate-500 font-bold">
+                                                    <tr>
+                                                        <th class="p-3">Jovem / Turma</th>
+                                                        <th class="p-3">Local</th>
+                                                        <th class="p-3 text-center">Vigência</th>
+                                                        <th class="p-3 text-center">Visitas</th>
+                                                        <th class="p-3 text-center">Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="biTableBody" class="divide-y divide-slate-100 text-xs"></tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </main>
@@ -375,9 +413,9 @@
                 </div>
             </div>
 
-            <!-- ABA: FLUXOGRAMA -->
+            <!-- ABA: FLUXOGRAMA (CÓDIGO ORIGINAL COM CSS AJUSTADO) -->
             <div id="view-fluxograma" class="timeline-container timeline-line hidden-section">
-                <!-- Conteúdo 100% preservado do seu código original -->
+                <!-- Banner 1: Decreto -->
                 <a href="https://www.planalto.gov.br/ccivil_03/_Ato2023-2026/2023/Decreto/D11479.htm" target="_blank" class="timeline-art art-1">
                     <div class="art-content">
                         <div class="art-title">DECRETO Nº 11.479,</div>
@@ -464,6 +502,7 @@
 
                 <div class="phase-badge"><span class="phase-orange"><span>Fase 2: Logística</span></span></div>
                 
+                <!-- Banner 2: Lei -->
                 <a href="https://www.planalto.gov.br/ccivil_03/LEIS/L10097.htm" target="_blank" class="timeline-art art-2">
                     <div class="art-content">
                         <div class="art-title">Lei nº 10.097</div>
@@ -524,6 +563,7 @@
                     <div class="step-number bg-orange">11</div><div class="empty-space"></div>
                 </div>
                 
+                <!-- Banner 3: Portaria -->
                 <a href="https://www.gov.br/trabalho-e-emprego/pt-br/assuntos/aprendizagem-profissional" target="_blank" class="timeline-art art-3">
                     <div class="art-content">
                         <div class="art-title" style="font-size: 1.2rem;">PORTARIA MTE Nº 3.872,</div>
@@ -533,6 +573,7 @@
                     <img src="https://upload.wikimedia.org/wikipedia/commons/b/bf/Coat_of_arms_of_Brazil.svg" class="art-coat" alt="Brasão">
                 </a>
 
+                 <!-- Banner 4: Lista TIP -->
                  <a href="https://www.planalto.gov.br/ccivil_03/_ato2007-2010/2008/decreto/d6481.htm" target="_blank" class="timeline-art art-4">
                     <div class="art-content">
                         <div class="art-title" style="font-size: 1.2rem;">LISTA TIP</div>
@@ -1069,10 +1110,6 @@
             } catch(e) {}
         }
 
-        function toggleBiLoginMethod() {
-            // Unificado: Sempre exige senha
-        }
-
         function performBiLogin() {
             const region = document.getElementById('biLoginRegion').value;
             const password = document.getElementById('biLoginPassword').value;
@@ -1167,26 +1204,83 @@
             reader.readAsArrayBuffer(file);
         }
 
+        // LÓGICA ROBUSTA RESTAURADA
         function parseBiSheet(ws) {
             const json = XLSX.utils.sheet_to_json(ws, {header: 1, defval: ""});
             if(json.length < 2) return [];
-            const headers = json[0].map(h => String(h).trim());
-            const getIdx = (key) => headers.findIndex(h => h.toLowerCase().includes(key.toLowerCase()));
+            const h = json[0].map(x => String(x).trim().toLowerCase());
             
-            const idx = {
-                nome: getIdx("Nome"), turma: getIdx("Turma"), cidade: getIdx("Cidade"), regiao: getIdx("Região"),
-                empresa: getIdx("Empresa"), status: getIdx("Status"), dtIni: getIdx("Ini"), dtFim: getIdx("Fim")
+            const find = (keys) => {
+                for(let k of keys) {
+                    const idx = h.findIndex(x => x.includes(k.toLowerCase()));
+                    if(idx > -1) return idx;
+                }
+                return -1;
             };
 
-            return json.slice(1).map((row, i) => ({
-                id: i,
-                nome: row[idx.nome] || row[0] || "Desconhecido",
-                turma: row[idx.turma] || row[1] || "",
-                cidade: row[idx.cidade] || "N/A",
-                regiao: row[idx.regiao] || "Geral",
-                empresa: row[idx.empresa] || "",
-                status: "No Prazo"
-            }));
+            const map = {
+                nome: find(["Nome", "Jovem"]),
+                turma: find(["Turma", "Matrícula"]),
+                empresa: find(["Razao", "Empresa"]),
+                cidade: find(["Cidade"]),
+                regiao: find(["Região", "Atuação"]),
+                dtIni: find(["Ini", "Inicio"]),
+                dtFim: find(["Fim", "Termino"]),
+                v1dt: find(["Visita 1", "V1"]),
+                v1st: find(["Status Visita 1"]),
+                v2dt: find(["Visita 2", "V2"]),
+                v2st: find(["Status Visita"]), // Se for header repetido, a lógica abaixo ajusta
+                v3dt: find(["Visita 3", "V3"]),
+                v3st: find(["Status Visita"]) 
+            };
+
+            return json.slice(1).map((row, i) => {
+                if(!row[map.nome]) return null;
+                return {
+                    id: i,
+                    nome: row[map.nome],
+                    turma: row[map.turma] || "-",
+                    empresa: row[map.empresa] || "-",
+                    cidade: row[map.cidade] || "-",
+                    regiao: row[map.regiao] || "Geral",
+                    inicio: parseDate(row[map.dtIni]),
+                    fim: parseDate(row[map.dtFim]),
+                    visits: [
+                        {d: parseDate(row[map.v1dt]), s: String(row[map.v1st]||"")},
+                        {d: parseDate(row[map.v2dt]), s: String(row[map.v2st + (map.v2st === map.v1st ? 1 : 0)]||"")},
+                        {d: parseDate(row[map.v3dt]), s: String(row[map.v3st + (map.v3st === map.v1st ? 2 : 0)]||"")}
+                    ]
+                };
+            }).filter(x => x);
+        }
+
+        function parseDate(v) {
+            if(!v) return null;
+            if(v instanceof Date) return v;
+            if(typeof v === 'number') return new Date(Math.round((v - 25569)*864e5));
+            return null;
+        }
+
+        function analyze(item) {
+            const now = new Date();
+            const isClosed = item.fim && item.fim < now;
+            let status = "No Prazo", color = "green";
+            
+            if(isClosed) { status = "Encerrado"; color = "gray"; }
+            else {
+                let done = 0, lastDate = item.inicio;
+                item.visits.forEach(v => {
+                    if(v.s.toLowerCase().includes('realizada')) { done++; if(v.d) lastDate = v.d; }
+                });
+
+                if(done === 3) { status = "Concluído"; color = "blue"; }
+                else if(lastDate) {
+                    const limit = new Date(lastDate);
+                    limit.setDate(limit.getDate() + (biCurrentScope === 'tecnico' ? 120 : 90));
+                    if(now > limit) { status = "Atrasado"; color = "red"; }
+                }
+            }
+            return { ...item, status, color, isClosed };
         }
 
         function applyBiFilters() {
@@ -1194,7 +1288,7 @@
             const regiao = document.getElementById('biFilterRegiao').value;
             const cidade = document.getElementById('biFilterCidade').value;
             
-            biFilteredData = (biDb[biCurrentScope] || []).filter(item => {
+            biFilteredData = (biDb[biCurrentScope] || []).map(analyze).filter(item => {
                 if(search && !item.nome.toLowerCase().includes(search)) return false;
                 if(regiao && item.regiao !== regiao) return false;
                 if(cidade && item.cidade !== cidade) return false;
@@ -1213,44 +1307,67 @@
         }
 
         function updateBiDashboard() {
-            document.getElementById('biKpiTotal').innerText = biFilteredData.length;
+            const kpis = { total: biFilteredData.length, atrasados: 0, noprazo: 0 };
+            biFilteredData.forEach(i => {
+                if(i.color === 'red') kpis.atrasados++;
+                else if(['green','blue'].includes(i.color)) kpis.noprazo++;
+            });
+            document.getElementById('biKpiTotal').innerText = kpis.total;
+            document.getElementById('biKpiAtrasados').innerText = kpis.atrasados;
+            document.getElementById('biKpiNoPrazo').innerText = kpis.noprazo;
+            
             renderBiTable();
-            renderBiCharts();
+            renderBiCharts(kpis);
         }
 
         function renderBiTable() {
             const tbody = document.getElementById('biTableBody');
             tbody.innerHTML = '';
             if(biFilteredData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="p-8 text-center text-gray-400">Nenhum dado encontrado. Carregue um arquivo Excel.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-gray-400">Nenhum dado encontrado. Carregue um arquivo Excel.</td></tr>`;
                 return;
             }
-            biFilteredData.slice(0, 50).forEach(item => {
+            biFilteredData.slice(0, 50).forEach(i => {
+                let vHtml = '<div class="flex gap-1 justify-center">';
+                i.visits.forEach((v, idx) => {
+                    let cls = v.s.toLowerCase().includes('realizada') ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-400';
+                    vHtml += `<div class="w-5 h-5 rounded-full ${cls} text-[9px] flex items-center justify-center font-bold" title="${v.s}">${idx+1}</div>`;
+                });
+                vHtml += '</div>';
+
                 tbody.innerHTML += `
                     <tr class="hover:bg-slate-50 border-b border-slate-50">
                         <td class="p-4">
-                            <div class="font-bold text-slate-700 text-sm">${item.nome}</div>
-                            <div class="text-xs text-slate-400">${item.turma}</div>
+                            <div class="font-bold text-slate-700 text-sm">${i.nome}</div>
+                            <div class="text-xs text-slate-400">${i.turma}</div>
                         </td>
                         <td class="p-4 text-xs text-slate-600">
-                            ${item.empresa}<br><span class="text-slate-400">${item.cidade}</span>
+                            ${i.empresa}<br><span class="text-slate-400">${i.cidade}</span>
+                        </td>
+                        <td class="p-4 text-center text-xs text-slate-500">
+                            ${i.inicio ? i.inicio.toLocaleDateString('pt-BR') : '-'}
+                        </td>
+                         <td class="p-4 text-center text-xs text-slate-500">
+                            ${vHtml}
                         </td>
                         <td class="p-4 text-center">
-                            <span class="px-2 py-1 bg-emerald-100 text-emerald-700 rounded text-xs font-bold">${item.status}</span>
+                             <span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded-full ${i.color === 'red' ? 'bg-red-100 text-red-600' : (i.color === 'green' ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-500')}">
+                                ${i.status}
+                            </span>
                         </td>
                     </tr>`;
             });
         }
 
-        function renderBiCharts() {
+        function renderBiCharts(kpis) {
             const ctxStatus = document.getElementById('biChartStatus');
             if(ctxStatus) {
                 if(biChartStatusInstance) biChartStatusInstance.destroy();
                 biChartStatusInstance = new Chart(ctxStatus, {
                     type: 'doughnut',
                     data: {
-                        labels: ['No Prazo', 'Atrasado'],
-                        datasets: [{ data: [biFilteredData.length, 0], backgroundColor: ['#10b981', '#ef4444'], borderWidth: 0 }]
+                        labels: ['No Prazo', 'Atrasado', 'Outros'],
+                        datasets: [{ data: [kpis.noprazo, kpis.atrasados, kpis.total - kpis.noprazo - kpis.atrasados], backgroundColor: ['#10b981', '#ef4444', '#94a3b8'], borderWidth: 0 }]
                     },
                     options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { display: false } } }
                 });
@@ -1258,11 +1375,14 @@
             const ctxReg = document.getElementById('biChartRegiao');
             if(ctxReg) {
                 if(biChartRegiaoInstance) biChartRegiaoInstance.destroy();
-                const data = biFilteredData.length ? [biFilteredData.length] : [0];
+                const count = {};
+                biFilteredData.forEach(i => count[i.cidade] = (count[i.cidade]||0)+1);
+                const sorted = Object.entries(count).sort((a,b) => b[1]-a[1]).slice(0,5);
+                
                 biChartRegiaoInstance = new Chart(ctxReg, {
                     type: 'bar',
-                    data: { labels: ['Total'], datasets: [{ label: 'Jovens', data: data, backgroundColor: '#004587' }] },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+                    data: { labels: sorted.map(x=>x[0]), datasets: [{ label: 'Jovens', data: sorted.map(x=>x[1]), backgroundColor: '#004587' }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, indexAxis: 'y' }
                 });
             }
         }
@@ -1270,7 +1390,17 @@
         function updateBiFinancials() {
             const budget = parseFloat(document.getElementById('biInputBudget').value) || 0;
             const cost = parseFloat(document.getElementById('biInputCost').value) || 0;
-            const pending = 10;
+            
+            let pending = 0;
+            [biDb.qualificacao, biDb.tecnico].forEach(list => {
+                list.forEach(i => {
+                     // Analise manual para contagem financeira
+                     const obj = analyze(i);
+                     if(obj.isClosed) return;
+                     obj.visits.forEach(v => { if(!v.s.toLowerCase().includes('realizada')) pending++; });
+                });
+            });
+
             const projected = pending * cost;
             const balance = budget - projected;
             
