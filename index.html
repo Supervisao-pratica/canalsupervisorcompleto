@@ -6,7 +6,16 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Portal do Supervisor da Prática - Senac PR</title>
     
-    <!-- 1. BIBLIOTECAS DO PAINEL BI -->
+    <!-- 1. BIBLIOTECAS (Tailwind, Lucide, SheetJS, ChartJS) -->
+    <!-- Google Generative AI (Gemini) Library -->
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/generative-ai": "https://esm.run/@google/generative-ai"
+        }
+      }
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -37,6 +46,7 @@
             --text-color: #374151;
             --border-color: #e5e7eb;
             --white: #ffffff;
+            --senac-light-blue: #0056a3;
         }
 
         /* Reset manual para garantir compatibilidade */
@@ -82,7 +92,7 @@
         .welcome-card::after { content: ''; display: block; height: 10px; background-color: var(--senac-dark-blue); border-radius: 0 0 16px 16px; margin: 40px -40px -40px -40px; }
         .welcome-title { font-size: 2rem; font-weight: 900; color: var(--senac-dark-blue); border-bottom: 3px solid var(--senac-orange); padding-bottom: 10px; margin-bottom: 20px; }
         
-        /* FLUXOGRAMA & ARTES (Ajustado conforme solicitado) */
+        /* FLUXOGRAMA & ARTES */
         .timeline-container { position: relative; padding: 40px 0; }
         .timeline-line::before { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 4px; background: #e2e8f0; transform: translateX(-50%); z-index: 0; }
         .timeline-step { display: flex; align-items: center; justify-content: space-between; margin-bottom: 40px; position: relative; }
@@ -96,7 +106,7 @@
         .border-left-green { border-left: 4px solid var(--senac-green); } .border-right-green { border-right: 4px solid var(--senac-green); text-align: right; }
         .empty-space { width: 45%; }
         
-        /* ARTES FLUTUANTES - Restauração do tamanho original solicitado */
+        /* ARTES FLUTUANTES - AJUSTADAS */
         .timeline-art { 
             position: absolute; 
             z-index: 5; 
@@ -148,6 +158,7 @@
         .ib-blue { background: #eff6ff; color: var(--senac-blue); } .ib-orange { background: #fff7ed; color: var(--senac-orange); }
         .member-card { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; display: flex; align-items: flex-start; }
         .avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--senac-blue); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 15px; flex-shrink: 0; font-size: 1.2rem; }
+        .avatar-gray { background: #6b7280; }
         
         /* FOOTER & MOBILE */
         footer { background-color: var(--senac-dark-blue); color: white; padding: 50px 0 20px; margin-top: auto; }
@@ -165,7 +176,6 @@
             .welcome-section { padding: 40px 10px; margin: 0; }
         }
 
-        /* VÍDEO RESPONSIVO */
         .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; background: #000; margin-top: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
 
@@ -184,9 +194,14 @@
         .scope-btn.active { opacity: 1; border-bottom-color: var(--senac-orange); background-color: #f8fafc; color: var(--senac-blue); }
         
         .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
         .loader { border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top: 3px solid #f68d2e; width: 20px; height: 20px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
+        /* Loader Gigante do BI */
+        .loader-large { border: 5px solid #e2e8f0; border-radius: 50%; border-top: 5px solid var(--senac-blue); width: 60px; height: 60px; animation: spin 1s linear infinite; }
+
         .money-input { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 12px; font-weight: 600; color: #0f172a; width: 100%; transition: all 0.2s; }
         .money-input:focus { border-color: var(--senac-blue); outline: none; background: white; box-shadow: 0 0 0 3px rgba(0, 69, 135, 0.1); }
 
@@ -194,6 +209,17 @@
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        
+        /* Z-Index Force dentro da aba */
+        #biLoginPage { z-index: 50; }
+        #biGlobalLoader { z-index: 60; }
+        #biAppContainer { z-index: 10; }
+        
+        .phase-badge { text-align: center; margin: 30px 0; position: relative; z-index: 2; }
+        .phase-badge span { display: inline-block; padding: 8px 20px; border-radius: 50px; font-weight: bold; text-transform: uppercase; font-size: 0.85rem; letter-spacing: 1px; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .phase-blue span { background: var(--senac-blue); }
+        .phase-orange span { background: var(--senac-orange); }
+        .phase-green span { background: var(--senac-green); }
     </style>
 </head>
 <body id="main-body" class="locked">
@@ -277,20 +303,21 @@
             </div>
 
             <!-- ABA: DADOS (PAINEL BI INTEGRADO) -->
-            <div id="view-dados" class="hidden-section w-full h-[800px] relative rounded-xl overflow-hidden border border-slate-200 shadow-lg bg-slate-50 font-sans">
+            <div id="view-dados" class="hidden-section w-full h-[800px] relative rounded-xl overflow-hidden border border-slate-200 shadow-lg bg-slate-50 font-sans text-slate-800 flex flex-col">
                 
-                <!-- LOGIN DO BI -->
-                <div id="bi-login-page" class="absolute inset-0 z-[60] flex items-center justify-center bg-slate-100 font-sans">
-                    <div class="absolute inset-0 overflow-hidden">
+                <!-- 1. TELA DE LOGIN BI -->
+                <div id="biLoginPage" class="absolute inset-0 flex items-center justify-center bg-slate-100 z-[50]">
+                    <div class="absolute inset-0 overflow-hidden pointer-events-none">
                         <div class="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] rounded-full bg-blue-900/5 blur-3xl"></div>
                         <div class="absolute top-[60%] -right-[10%] w-[40%] h-[60%] rounded-full bg-orange-500/5 blur-3xl"></div>
                     </div>
 
-                    <div class="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-md p-8 relative overflow-hidden z-10 mx-4">
-                        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-800 to-orange-500"></div>
+                    <div id="biLoginCard" class="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-md p-8 relative overflow-hidden mx-4">
+                        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-senac-blue to-senac-orange"></div>
+                        
                         <div class="text-center mb-8">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/8/86/Senac_logo.svg" alt="Senac Logo" class="h-16 mx-auto mb-4">
-                            <h2 class="text-2xl font-extrabold text-senac-blue">Painel de Supervisão BI</h2>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/8/86/Senac_logo.svg" alt="Senac Logo" class="h-16 mx-auto mb-4" style="display: block;">
+                            <h2 class="text-2xl font-extrabold text-senac-blue">Portal do Supervisor</h2>
                             <p class="text-sm text-slate-500 mt-1">Validação de Segurança</p>
                         </div>
 
@@ -299,121 +326,427 @@
                                 <div>
                                     <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Região de Atuação</label>
                                     <div class="relative">
-                                        <select id="biLoginRegion" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 font-medium outline-none focus:border-blue-800 focus:ring-2 focus:ring-blue-50 appearance-none cursor-pointer">
+                                        <select id="biLoginRegion" onchange="toggleBiLoginMethod()" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 font-medium outline-none focus:border-senac-blue focus:ring-2 focus:ring-blue-50 appearance-none cursor-pointer">
                                             <option value="">Acesso Geral (Todas as Regiões)</option>
                                         </select>
                                         <i data-lucide="chevron-down" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"></i>
                                     </div>
                                 </div>
+
+                                <div id="biEmailContainer" class="hidden animate-fade-in">
+                                    <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Seu E-mail Corporativo</label>
+                                    <div class="relative">
+                                        <input type="email" id="biLoginEmail" placeholder="nome.sobrenome@senac.br" 
+                                            class="w-full p-3 pl-10 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 font-medium outline-none focus:border-senac-blue focus:ring-2 focus:ring-blue-50">
+                                        <i data-lucide="mail" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"></i>
+                                    </div>
+                                </div>
+
                                 <div id="biPasswordContainer" class="animate-fade-in">
                                     <label class="block text-xs font-bold text-slate-500 uppercase mb-2">Senha de Acesso</label>
-                                    <input type="password" id="biLoginPassword" placeholder="Digite a senha de gestão" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 font-medium outline-none focus:border-blue-800 focus:ring-2">
+                                    <div class="relative">
+                                        <input type="password" id="biLoginPassword" placeholder="Digite a senha de gestão" 
+                                            class="w-full p-3 pl-10 pr-10 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 font-medium outline-none focus:border-senac-blue focus:ring-2 focus:ring-blue-50">
+                                        <i data-lucide="lock" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"></i>
+                                    </div>
                                 </div>
                             </div>
-                            <button onclick="performBiLogin()" class="w-full py-3 bg-senac-blue hover:bg-blue-800 text-white font-bold rounded-xl transition-all shadow-lg flex items-center justify-center gap-2">
-                                <span>Acessar Painel</span> <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            
+                            <button onclick="performBiLogin()" class="w-full py-3 bg-senac-blue hover:bg-blue-800 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-900/10 flex items-center justify-center gap-2 cursor-pointer transform hover:scale-[1.02]">
+                                <span>Acessar Painel</span>
+                                <i data-lucide="arrow-right" class="w-4 h-4"></i>
                             </button>
+
+                             <div class="mt-6 flex justify-center items-center px-2">
+                                <button onclick="resetBiUsersToDefault()" class="text-[10px] text-slate-400 hover:text-red-500 hover:underline">
+                                    Restaurar Padrão
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- APLICAÇÃO BI -->
-                <div id="bi-app-container" class="hidden flex-col h-full w-full bg-slate-50">
+                <!-- 2. TELA DE CARREGAMENTO GLOBAL BI -->
+                <div id="biGlobalLoader" class="absolute inset-0 flex flex-col items-center justify-center bg-white hidden z-[60]">
+                    <div class="loader-large mb-6"></div>
+                    <h3 class="text-xl font-bold text-slate-700 mb-2">Aguarde um momento</h3>
+                    <p id="biLoadingMessage" class="text-sm text-slate-500 font-mono">Autenticando usuário...</p>
+                </div>
+
+                <!-- 3. ÁREA PRINCIPAL DO SISTEMA BI (Inicialmente Oculta) -->
+                <div id="biAppContainer" class="hidden flex-col h-full w-full opacity-0 transition-opacity duration-700 z-[10]">
+                    
+                    <!-- Header -->
                     <header class="bg-white border-b border-slate-200 flex-shrink-0 z-30 shadow-sm flex flex-col">
+                        <!-- Top Bar -->
                         <div class="h-16 flex items-center justify-between px-8">
                             <div class="flex items-center gap-4">
-                                <h1 class="font-bold text-sm text-slate-700 m-0">Painel de Supervisão</h1>
-                                <p class="text-[10px] text-slate-400 font-medium uppercase tracking-wider m-0">Gestão de Aprendizagem</p>
+                                <div class="flex flex-col select-none justify-center">
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/8/86/Senac_logo.svg" alt="Senac" class="h-10">
+                                </div>
+                                <div class="h-8 w-px bg-slate-200 mx-2"></div>
+                                <div>
+                                    <h1 class="font-bold text-sm text-slate-700">Painel de Supervisão</h1>
+                                    <p class="text-[10px] text-slate-400 font-medium uppercase tracking-wider">Gestão de Aprendizagem</p>
+                                </div>
                             </div>
+
                             <div class="flex items-center gap-6">
+                                <!-- Info Usuário -->
                                 <div class="text-right hidden md:block">
                                     <p class="text-sm font-bold text-senac-blue" id="biDisplayUserName"></p>
                                     <p class="text-[10px] text-slate-400 font-mono" id="biDisplayUserRegion"></p>
                                 </div>
+
+                                <!-- Botão Upload -->
                                 <div class="flex items-center gap-2">
                                     <input type="file" id="biFileInput" accept=".csv, .xlsx, .xlsm, .xls" class="hidden" onchange="processBiFile(this)">
-                                    <button onclick="document.getElementById('biFileInput').click()" class="group flex items-center gap-2 bg-slate-50 hover:bg-blue-800 hover:text-white text-slate-600 px-4 py-2 rounded-xl border border-slate-200 transition-all shadow-sm">
-                                        <i data-lucide="upload-cloud" class="w-4 h-4 text-orange-500 group-hover:text-white"></i>
-                                        <span id="biBtnUploadText" class="text-xs font-bold uppercase m-0">Carregar Dados</span>
+                                    <button onclick="document.getElementById('biFileInput').click()" class="group flex items-center gap-2 bg-slate-50 hover:bg-senac-blue hover:text-white text-slate-600 px-4 py-2 rounded-xl border border-slate-200 transition-all shadow-sm" title="Carregar Dados Gerais.xlsm">
+                                        <i data-lucide="upload-cloud" class="w-4 h-4 text-senac-orange group-hover:text-white transition-colors"></i>
+                                        <span id="biBtnUploadText" class="text-xs font-bold uppercase">Carregar Dados</span>
                                     </button>
-                                    <div id="biLoadingSpinner" class="hidden"><div class="loader"></div></div>
                                 </div>
-                                <button onclick="logoutBI()" class="p-2 hover:bg-red-50 text-slate-400 hover:text-red-500 rounded-lg transition-colors" title="Sair do Painel"><i data-lucide="log-out" class="w-5 h-5"></i></button>
+                                
+                                <button onclick="logoutBi()" class="p-2 hover:bg-red-50 text-slate-400 hover:text-red-500 rounded-lg transition-colors" title="Sair / Trocar Usuário">
+                                    <i data-lucide="log-out" class="w-5 h-5"></i>
+                                </button>
                             </div>
                         </div>
+
+                        <!-- Navegação (Tabs) -->
                         <div class="flex px-8 bg-white gap-8 border-t border-slate-50">
-                            <button onclick="switchBiTab('qualificacao')" id="biTabQualificacao" class="scope-btn active py-3 text-xs font-bold uppercase tracking-wide flex items-center gap-2"><i data-lucide="book-open" class="w-4 h-4"></i> Qualificação</button>
-                            <button onclick="switchBiTab('tecnico')" id="biTabTecnico" class="scope-btn py-3 text-xs font-bold uppercase tracking-wide flex items-center gap-2"><i data-lucide="wrench" class="w-4 h-4"></i> Técnico</button>
-                            <button onclick="switchBiTab('financeiro')" id="biTabFinanceiro" class="scope-btn py-3 text-xs font-bold uppercase tracking-wide flex items-center gap-2 text-emerald-600"><i data-lucide="dollar-sign" class="w-4 h-4"></i> Financeiro</button>
+                            <button onclick="switchBiTab('qualificacao')" id="biTabQualificacao" class="scope-btn active py-3 text-xs font-bold uppercase tracking-wide flex items-center gap-2">
+                                <i data-lucide="book-open" class="w-4 h-4"></i>
+                                Aprendizagem Qualificação
+                            </button>
+                            <button onclick="switchBiTab('tecnico')" id="biTabTecnico" class="scope-btn py-3 text-xs font-bold uppercase tracking-wide flex items-center gap-2">
+                                <i data-lucide="wrench" class="w-4 h-4"></i>
+                                Aprendizagem Técnica
+                            </button>
+                            <button onclick="switchBiTab('financeiro')" id="biTabFinanceiro" class="scope-btn py-3 text-xs font-bold uppercase tracking-wide flex items-center gap-2 text-emerald-600">
+                                <i data-lucide="dollar-sign" class="w-4 h-4"></i>
+                                Gestão Financeira
+                            </button>
                         </div>
                     </header>
 
+                    <!-- VIEWS -->
                     <div class="flex-1 overflow-hidden relative">
-                        <!-- VIEW BI: DASHBOARD -->
+                        
+                        <!-- VIEW 1: DASHBOARD OPERACIONAL -->
                         <div id="biViewDashboard" class="flex h-full w-full">
-                            <aside class="w-64 bg-white border-r border-slate-200 flex flex-col z-20 overflow-y-auto custom-scrollbar">
+                            <!-- Sidebar Filtros -->
+                            <aside class="w-80 bg-white border-r border-slate-200 flex flex-col z-20 overflow-y-auto shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
                                 <div class="p-6 border-b border-slate-100 bg-slate-50/50">
-                                    <h3 class="font-bold text-slate-700 mb-5 text-sm">Filtros Avançados</h3>
-                                    <input type="text" id="biFilterSearch" onkeyup="applyBiFilters()" placeholder="Buscar..." class="w-full mb-5 p-3 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:border-blue-800">
-                                    <select id="biFilterRegiao" onchange="handleBiRegionChange()" class="w-full mb-4 p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none cursor-pointer"><option value="">Todas as Regiões</option></select>
-                                    <select id="biFilterCidade" onchange="applyBiFilters()" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none cursor-pointer"><option value="">Todas as Cidades</option></select>
+                                    <h3 class="font-bold text-slate-700 flex items-center gap-2 mb-5">
+                                        <div class="p-1.5 bg-white border border-slate-200 rounded-lg shadow-sm text-senac-orange">
+                                            <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
+                                        </div>
+                                        Filtros Avançados
+                                    </h3>
+                                    
+                                    <div class="relative group mb-5">
+                                        <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-senac-blue transition-colors"></i>
+                                        <input type="text" id="biFilterSearch" onkeyup="applyBiFilters()" placeholder="Buscar Jovem ou Turma..." 
+                                            class="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:border-senac-blue focus:ring-4 focus:ring-blue-50 outline-none transition-all shadow-sm">
+                                    </div>
+
+                                    <div class="mb-6">
+                                        <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wide ml-1 mb-1 block">Situação do Contrato</label>
+                                        <div class="relative">
+                                            <select id="biFilterContractStatus" onchange="applyBiFilters()" class="w-full appearance-none p-3 bg-white border border-slate-200 rounded-xl text-sm outline-none focus:border-senac-blue focus:ring-2 focus:ring-blue-50 transition-all cursor-pointer text-slate-700 font-medium">
+                                                <option value="active">Apenas Ativos (Padrão)</option>
+                                                <option value="closed" class="text-red-600 font-bold">Apenas Encerrados</option>
+                                                <option value="all">Todos (Ativos + Encerrados)</option>
+                                            </select>
+                                            <i data-lucide="chevron-down" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"></i>
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wide ml-1 mb-1 block">Região</label>
+                                            <div class="relative">
+                                                <select id="biFilterRegiao" onchange="handleBiRegionChange()" class="w-full appearance-none p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-senac-blue focus:bg-white transition-all cursor-pointer text-slate-700 disabled:opacity-50 disabled:bg-slate-100">
+                                                    <option value="">Todas as Regiões</option>
+                                                </select>
+                                                <i data-lucide="chevron-down" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"></i>
+                                            </div>
+                                            <p id="biRegionLockMsg" class="hidden text-[10px] text-senac-orange mt-1 font-bold flex items-center gap-1"><i data-lucide="lock" class="w-3 h-3"></i> Filtro bloqueado pelo perfil</p>
+                                        </div>
+                                        <div>
+                                            <label class="text-[11px] font-bold text-slate-400 uppercase tracking-wide ml-1 mb-1 block">Cidade</label>
+                                            <div class="relative">
+                                                <select id="biFilterCidade" onchange="applyBiFilters()" class="w-full appearance-none p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-senac-blue focus:bg-white transition-all cursor-pointer text-slate-700">
+                                                    <option value="">Todas as Cidades</option>
+                                                </select>
+                                                <i data-lucide="chevron-down" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- NOVA SEÇÃO: INTEGRAÇÃO GEMINI (INSERIDA DENTRO DA ESTRUTURA ORIGINAL) -->
+                                    <div class="mt-8 pt-6 border-t border-slate-200">
+                                        <h3 class="font-bold text-slate-700 flex items-center gap-2 mb-3">
+                                            <div class="p-1.5 bg-gradient-to-tr from-blue-500 to-purple-500 rounded-lg shadow-sm text-white">
+                                                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                                            </div>
+                                            Assistente Gemini AI
+                                        </h3>
+                                        <div class="p-3 bg-slate-50 rounded-xl border border-slate-200">
+                                            <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Google API Key</label>
+                                            <input type="password" id="geminiApiKey" placeholder="Cole sua chave aqui..." class="w-full p-2 text-sm bg-white border border-slate-200 rounded-lg mb-2 focus:border-senac-blue outline-none">
+                                            <button type="button" onclick="conectarGemini()" class="w-full py-2 bg-slate-800 text-white text-xs font-bold rounded-lg hover:bg-slate-900 transition-all flex items-center justify-center gap-2">
+                                                Conectar IA <i data-lucide="zap" class="w-3 h-3"></i>
+                                            </button>
+                                            <p id="geminiStatus" class="text-[10px] text-slate-400 mt-2 text-center"></p>
+                                        </div>
+                                    </div>
+                                    <!-- FIM DA SEÇÃO GEMINI -->
+
+                                </div>
+
+                                <div class="p-6 mt-auto bg-slate-50 border-t border-slate-200">
+                                    <p class="text-[10px] font-bold text-slate-400 uppercase mb-3">Legenda de Situação</p>
+                                    <div class="space-y-2.5">
+                                        <div class="flex items-center gap-2.5">
+                                            <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]"></div>
+                                            <span class="text-xs text-slate-600 font-medium">No Prazo / Realizada</span>
+                                        </div>
+                                        <div class="flex items-center gap-2.5">
+                                            <div class="w-2.5 h-2.5 rounded-full bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.4)]"></div>
+                                            <span id="biLegendDelayedText" class="text-xs text-slate-600 font-medium">Atrasado (> 90 dias)</span>
+                                        </div>
+                                        <div class="flex items-center gap-2.5">
+                                            <div class="w-2.5 h-2.5 rounded-full bg-slate-400"></div>
+                                            <span class="text-xs text-slate-400">Encerrado</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </aside>
+
+                            <!-- Conteúdo Principal Dashboard -->
                             <main class="flex-1 flex flex-col overflow-hidden bg-slate-50/50 relative">
+                                <!-- KPIs -->
                                 <div class="p-6 pb-2 grid grid-cols-12 gap-6 h-auto flex-shrink-0">
                                     <div class="col-span-12 lg:col-span-3 grid grid-cols-1 gap-4">
-                                        <div class="card-bi p-5 border-l-4 border-l-blue-800"><p class="text-[11px] text-slate-400 font-bold uppercase mb-1">Total</p><h2 class="text-3xl font-extrabold text-slate-800 m-0" id="biKpiTotal">0</h2></div>
-                                        <div class="card-bi p-5 border-l-4 border-l-red-500"><p class="text-[11px] text-red-400 font-bold uppercase mb-1">Atrasados</p><h2 class="text-3xl font-extrabold text-red-600 m-0" id="biKpiAtrasados">0</h2></div>
-                                        <div class="card-bi p-5 border-l-4 border-l-emerald-500"><p class="text-[11px] text-emerald-500 font-bold uppercase mb-1">Em Dia</p><h2 class="text-3xl font-extrabold text-emerald-600 m-0" id="biKpiNoPrazo">0</h2></div>
+                                        <div onclick="filterBiByStatus('all')" class="card-bi p-5 cursor-pointer relative overflow-hidden group border-l-4 border-l-senac-blue">
+                                            <div class="flex justify-between items-start z-10 relative">
+                                                <div>
+                                                    <p class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1">Total Visualizado</p>
+                                                    <h2 class="text-3xl font-extrabold text-slate-800 group-hover:text-senac-blue transition-colors" id="biKpiTotal">0</h2>
+                                                </div>
+                                                <div class="p-2.5 bg-blue-50 text-senac-blue rounded-xl group-hover:scale-110 transition-transform">
+                                                    <i data-lucide="users" class="w-5 h-5"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div onclick="filterBiByStatus('atrasado')" class="card-bi p-5 cursor-pointer relative overflow-hidden group border-l-4 border-l-red-500">
+                                            <div class="flex justify-between items-start z-10 relative">
+                                                <div>
+                                                    <p class="text-[11px] text-red-400 font-bold uppercase tracking-wider mb-1">Visitas Atrasadas</p>
+                                                    <h2 class="text-3xl font-extrabold text-red-600" id="biKpiAtrasados">0</h2>
+                                                    <p id="biKpiDelayedText" class="text-[10px] text-red-400 mt-1 font-medium">Fora do prazo de 90 dias</p>
+                                                </div>
+                                                <div class="p-2.5 bg-red-50 text-red-500 rounded-xl group-hover:scale-110 transition-transform">
+                                                    <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div onclick="filterBiByStatus('noprazo')" class="card-bi p-5 cursor-pointer relative overflow-hidden group border-l-4 border-l-emerald-500">
+                                            <div class="flex justify-between items-start z-10 relative">
+                                                <div>
+                                                    <p class="text-[11px] text-emerald-500 font-bold uppercase tracking-wider mb-1">Em Dia</p>
+                                                    <h2 class="text-3xl font-extrabold text-emerald-600" id="biKpiNoPrazo">0</h2>
+                                                </div>
+                                                <div class="p-2.5 bg-emerald-50 text-emerald-500 rounded-xl group-hover:scale-110 transition-transform">
+                                                    <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-span-12 md:col-span-4 lg:col-span-4 card-bi p-5 flex flex-col"><div class="flex-1 relative flex items-center justify-center"><canvas id="biChartStatus"></canvas></div></div>
-                                    <div class="col-span-12 md:col-span-5 lg:col-span-5 card-bi p-5 flex flex-col"><div class="flex-1 relative"><canvas id="biChartRegiao"></canvas></div></div>
+
+                                    <!-- Gráficos -->
+                                    <div class="col-span-12 md:col-span-4 lg:col-span-4 card-bi p-5 flex flex-col">
+                                        <h3 class="text-xs font-bold text-slate-600 uppercase mb-4 flex items-center gap-2">
+                                            <i data-lucide="pie-chart" class="w-4 h-4 text-senac-orange"></i> Status Geral
+                                        </h3>
+                                        <div class="flex-1 min-h-0 relative flex items-center justify-center">
+                                            <canvas id="biChartStatus"></canvas>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-span-12 md:col-span-5 lg:col-span-5 card-bi p-5 flex flex-col">
+                                        <h3 class="text-xs font-bold text-slate-600 uppercase mb-4 flex items-center gap-2">
+                                            <i data-lucide="bar-chart-2" class="w-4 h-4 text-senac-blue"></i> Top Cidades/Regiões
+                                        </h3>
+                                        <div class="flex-1 min-h-0 relative">
+                                            <canvas id="biChartRegiao"></canvas>
+                                        </div>
+                                    </div>
                                 </div>
+
+                                <!-- Tabela -->
                                 <div class="flex-1 px-6 pb-6 overflow-hidden flex flex-col">
                                     <div class="card-bi flex-1 flex flex-col overflow-hidden bg-white">
                                         <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-white rounded-t-2xl">
-                                            <h3 class="font-bold text-slate-700 text-sm m-0">Detalhamento</h3>
-                                            <button onclick="exportBiReport()" class="flex items-center gap-2 px-4 py-2 bg-emerald-500 text-white rounded-lg text-xs font-bold"><i data-lucide="download" class="w-4 h-4"></i> Excel</button>
+                                            <div class="flex items-center gap-3">
+                                                <div class="p-2 bg-slate-100 rounded-lg text-slate-600">
+                                                    <i data-lucide="list" class="w-4 h-4"></i>
+                                                </div>
+                                                <div>
+                                                    <h3 class="font-bold text-slate-700 text-sm">Detalhamento dos Contratos</h3>
+                                                    <p class="text-xs text-slate-400 mt-0.5">Mostrando <strong id="biCountFiltered" class="text-senac-blue">0</strong> registros</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="flex gap-2">
+                                                <button onclick="exportBiReport()" class="flex items-center gap-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-xs font-bold transition-all shadow-md shadow-emerald-200">
+                                                    <i data-lucide="download" class="w-4 h-4"></i> Baixar Relatório
+                                                </button>
+                                            </div>
                                         </div>
+
                                         <div class="flex-1 overflow-auto custom-scrollbar">
                                             <table class="w-full text-left border-collapse">
-                                                <thead class="bg-slate-50 sticky top-0 z-10 text-[10px] uppercase text-slate-500 font-bold">
+                                                <thead class="bg-slate-50 sticky top-0 z-10 text-[11px] uppercase text-slate-500 font-bold tracking-wide shadow-sm">
                                                     <tr>
-                                                        <th class="p-3">Jovem / Turma</th>
-                                                        <th class="p-3">Local</th>
-                                                        <th class="p-3 text-center">Vigência</th>
-                                                        <th class="p-3 text-center">Visitas</th>
-                                                        <th class="p-3 text-center">Status</th>
+                                                        <th class="p-4 w-[25%]">Jovem / Turma</th>
+                                                        <th class="p-4 w-[20%]">Empresa / Cidade</th>
+                                                        <th class="p-4 w-[20%]">Supervisor</th>
+                                                        <th class="p-4 w-[10%] text-center">Início/Fim</th>
+                                                        <th class="p-4 w-[15%] text-center">Situação Visitas</th>
+                                                        <th class="p-4 w-[10%] text-center">Status</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody id="biTableBody" class="divide-y divide-slate-100 text-xs"></tbody>
+                                                <tbody id="biTableBody" class="divide-y divide-slate-100 text-sm">
+                                                    <tr>
+                                                        <td colspan="6" class="p-12 text-center text-slate-400">
+                                                            <div class="flex flex-col items-center gap-3">
+                                                                <div class="w-16 h-16 bg-blue-50 text-senac-blue rounded-full flex items-center justify-center mb-2">
+                                                                    <i data-lucide="folder-open" class="w-8 h-8"></i>
+                                                                </div>
+                                                                <p class="text-sm font-bold text-slate-600">Aguardando dados...</p>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
                                             </table>
+                                        </div>
+                                        
+                                        <div class="p-3 border-t border-slate-100 flex justify-between items-center bg-slate-50 rounded-b-2xl px-6">
+                                            <span class="text-xs text-slate-500">Página <span id="biPageDisplay" class="font-bold text-slate-700">1</span></span>
+                                            <div class="flex gap-2">
+                                                <button onclick="changeBiPage(-1)" class="px-3 py-1.5 border border-slate-200 rounded-lg hover:bg-white text-xs font-bold text-slate-600 disabled:opacity-50 transition-all shadow-sm" id="biBtnPrev">Anterior</button>
+                                                <button onclick="changeBiPage(1)" class="px-3 py-1.5 border border-slate-200 rounded-lg hover:bg-white text-xs font-bold text-slate-600 disabled:opacity-50 transition-all shadow-sm" id="biBtnNext">Próxima</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </main>
                         </div>
-                        <!-- VIEW BI: FINANCEIRO -->
-                        <div id="biViewFinanceiro" class="hidden h-full w-full bg-slate-50/50 flex-col overflow-auto p-8 custom-scrollbar">
-                             <div class="max-w-7xl mx-auto w-full">
-                                <h2 class="text-2xl font-bold text-slate-800 mb-8 mt-0">Gestão Orçamentária</h2>
+
+                        <!-- VIEW 2: DASHBOARD FINANCEIRO -->
+                        <div id="biViewFinanceiro" class="hidden h-full w-full bg-slate-50/50 flex-col overflow-auto p-8">
+                            
+                            <div class="max-w-7xl mx-auto w-full">
+                                <div class="flex items-center justify-between mb-8">
+                                    <div>
+                                        <h2 class="text-2xl font-bold text-slate-800">Gestão Orçamentária de Visitas</h2>
+                                        <p class="text-sm text-slate-500">Comparativo de orçamento disponível versus estimativa de custos para visitas pendentes.</p>
+                                    </div>
+                                    <div class="bg-white p-2 rounded-xl shadow-sm border border-slate-200 flex items-center gap-2">
+                                        <span class="text-xs font-bold uppercase text-slate-400 px-2">Escopo Total:</span>
+                                        <span class="text-sm font-bold text-senac-blue">Qualificação + Técnico</span>
+                                    </div>
+                                </div>
+
+                                <!-- Painel de Inputs e KPIs -->
                                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                                    <div class="card-bi p-5 border-l-4 border-l-emerald-500"><label class="text-xs font-bold text-slate-400 uppercase">Orçamento (R$)</label><input type="number" id="biInputBudget" value="5000" class="money-input text-xl" oninput="updateBiFinancials()"></div>
-                                    <div class="card-bi p-5 border-l-4 border-l-blue-500"><label class="text-xs font-bold text-slate-400 uppercase">Custo/Visita (R$)</label><input type="number" id="biInputCost" value="85.50" class="money-input text-xl" oninput="updateBiFinancials()"></div>
-                                    <div class="card-bi p-5"><p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Pendentes</p><h3 class="text-3xl font-extrabold text-slate-700 m-0" id="biFinPendingVisits">0</h3></div>
-                                    <div class="card-bi p-5 bg-slate-800 text-white border-none"><p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Custo Projetado</p><h3 class="text-3xl font-extrabold text-white m-0" id="biFinProjectedCost">R$ 0,00</h3></div>
+                                    <!-- Input: Orçamento -->
+                                    <div class="card-bi p-5 border-l-4 border-l-emerald-500">
+                                        <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Orçamento Disponível (R$)</label>
+                                        <input type="number" id="biInputBudget" value="5000" class="money-input text-xl" oninput="updateBiFinancials()">
+                                        <p class="text-[10px] text-slate-400 mt-2">Valor total em caixa para o período.</p>
+                                    </div>
+
+                                    <!-- Input: Custo Médio -->
+                                    <div class="card-bi p-5 border-l-4 border-l-blue-500">
+                                        <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Custo Estimado por Visita (R$)</label>
+                                        <input type="number" id="biInputCost" value="85.50" class="money-input text-xl" oninput="updateBiFinancials()">
+                                        <p class="text-[10px] text-slate-400 mt-2">Média (Km + Diária/Refeição).</p>
+                                    </div>
+
+                                    <!-- KPI: Visitas Pendentes -->
+                                    <div class="card-bi p-5 flex flex-col justify-center">
+                                        <div class="flex items-center justify-between">
+                                            <div>
+                                                <p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Visitas Pendentes (Total)</p>
+                                                <h3 class="text-3xl font-extrabold text-slate-700" id="biFinPendingVisits">0</h3>
+                                            </div>
+                                            <div class="p-3 bg-slate-100 rounded-full text-slate-500">
+                                                <i data-lucide="calendar-clock" class="w-6 h-6"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- KPI: Custo Total Estimado -->
+                                    <div class="card-bi p-5 flex flex-col justify-center bg-slate-800 text-white border-none">
+                                        <div>
+                                            <p class="text-[10px] text-slate-400 font-bold uppercase mb-1">Custo Total Projetado</p>
+                                            <h3 class="text-3xl font-extrabold text-white" id="biFinProjectedCost">R$ 0,00</h3>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                                    <div class="col-span-1 card-bi p-6 text-center"><p class="text-xs font-bold text-slate-400 uppercase mb-2">Saldo Final</p><h2 class="text-4xl font-extrabold mb-2 m-0" id="biFinBalance">R$ 0,00</h2><div id="biFinStatusBadge" class="px-4 py-1 rounded-full text-xs font-bold uppercase bg-slate-100 text-slate-500 inline-block">...</div></div>
-                                    <div class="col-span-2 card-bi p-5"><div class="h-64 w-full relative"><canvas id="biChartFinance"></canvas></div></div>
+
+                                <!-- Gráfico e Saldo -->
+                                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                                    <div class="col-span-1 card-bi p-6 flex flex-col items-center justify-center text-center">
+                                        <p class="text-xs font-bold text-slate-400 uppercase mb-2">Saldo Projetado</p>
+                                        <h2 class="text-4xl font-extrabold mb-2" id="biFinBalance">R$ 0,00</h2>
+                                        <div id="biFinStatusBadge" class="px-4 py-1 rounded-full text-xs font-bold uppercase bg-slate-100 text-slate-500">
+                                            Aguardando Cálculo
+                                        </div>
+                                        <p class="text-xs text-slate-400 mt-4 max-w-[200px]">
+                                            Se negativo, o orçamento não cobrirá todas as visitas pendentes.
+                                        </p>
+                                    </div>
+                                    <div class="col-span-2 card-bi p-5">
+                                        <h3 class="text-xs font-bold text-slate-600 uppercase mb-4">Comparativo Financeiro</h3>
+                                        <div class="h-64 w-full relative">
+                                            <canvas id="biChartFinance"></canvas>
+                                        </div>
+                                    </div>
                                 </div>
-                             </div>
+
+                                <!-- Tabela de Detalhamento por Região -->
+                                <div class="card-bi overflow-hidden">
+                                    <div class="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+                                        <h3 class="font-bold text-slate-700 text-sm">Estimativa de Gastos por Região</h3>
+                                    </div>
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full text-left text-sm">
+                                            <thead class="bg-white text-xs uppercase text-slate-500 font-bold border-b border-slate-100">
+                                                <tr>
+                                                    <th class="p-4">Região / Cidade</th>
+                                                    <th class="p-4 text-center">Visitas Pendentes</th>
+                                                    <th class="p-4 text-right">Custo Estimado</th>
+                                                    <th class="p-4 text-center">% do Orçamento</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="biFinTableBody" class="divide-y divide-slate-100"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ABA: FLUXOGRAMA (CÓDIGO ORIGINAL COM CSS AJUSTADO) -->
+            <!-- ABA: FLUXOGRAMA (Banner Ajustado) -->
             <div id="view-fluxograma" class="timeline-container timeline-line hidden-section">
                 <!-- Banner 1: Decreto -->
                 <a href="https://www.planalto.gov.br/ccivil_03/_Ato2023-2026/2023/Decreto/D11479.htm" target="_blank" class="timeline-art art-1">
@@ -712,7 +1045,7 @@
                             </div>
                         </div>
                     </div>
-                     <div class="doc-card">
+                      <div class="doc-card">
                         <div class="doc-header">
                             <div class="icon-box ib-blue"><i class="fas fa-car"></i></div>
                             <div class="doc-info">
@@ -901,6 +1234,12 @@
         </div>
     </div>
 
+    <!-- MÓDULO GEMINI (ADICIONADO) -->
+    <script type="module">
+        import { GoogleGenerativeAI } from "@google/generative-ai";
+        window.GoogleGenerativeAI = GoogleGenerativeAI;
+    </script>
+
     <script>
         const loginScreen = document.getElementById('login-screen');
         const siteContent = document.getElementById('site-content');
@@ -927,7 +1266,8 @@
             siteContent.classList.remove('hidden-section');
             body.classList.remove('locked');
             switchTab('boas-vindas');
-            initBiUsers(); // Prepara o BI
+            // Inicializa usuários do BI
+            initBiUsers(); 
         }
 
         function logout() { localStorage.removeItem('senac_auth'); location.reload(); }
@@ -957,9 +1297,10 @@
             document.getElementById('hero-subtitle').innerText = titles[tabName][1];
             document.getElementById('mobile-menu').style.display = 'none';
 
-            // Se for aba Dados, tenta carregar gráficos se já logado no BI
-            if(tabName === 'dados' && biFilteredData.length > 0 && !biChartStatusInstance) {
-                setTimeout(updateBiDashboard, 100);
+            if(tabName === 'dados') {
+                if(biCurrentUser && biDb.qualificacao.length > 0) {
+                      setTimeout(() => { switchBiTab(biCurrentScope); }, 100);
+                }
             }
         }
 
@@ -1079,355 +1420,788 @@
         document.getElementById('step-detail-modal').addEventListener('click', function(e) { if (e.target === this) closeStepInfo(); });
 
         // ==========================================
-        // LÓGICA DO PAINEL BI (DADOS)
+        // LÓGICA DO NOVO PAINEL BI (DADOS)
         // ==========================================
         let biDb = { qualificacao: [], tecnico: [] };
         let biCurrentScope = 'qualificacao';
+        
+        let biFinancialChart = null;
+
+        const PREDEFINED_REGIONS = [
+            "APUCARANA", "CAMPO MOURÃO", "CASCAVEL", "CASTRO", "CORNÉLIO PROCÓPIO", "CURITIBA", 
+            "FOZ DO IGUAÇU", "FRANCISCO BELTRÃO", "GUARAPUAVA", "IRATI", "IVAIPORÃ", 
+            "JACAREZINHO", "LONDRINA", "MARINGÁ", "MATINHOS", "MEDIANEIRA", "PARANAGUÁ", 
+            "PARANAVAÍ", "PATO BRANCO", "PONTA GROSSA", "PRUDENTÓPOLIS", "RIO NEGRO", 
+            "SANTO ANTÔNIO DA PLATINA", "TOLEDO", "UMUARAMA", "UNIÃO DA VITÓRIA"
+        ];
+
+        const DEFAULT_BI_USERS = [
+            { name: 'Gestor Geral', region: '', email: 'gestor@senac.br' }
+        ];
+
+        let biCurrentUser = null;
+        let biUsers = [];
         let biFilteredData = [];
+        let biCurrentPage = 1;
+        const biItemsPerPage = 50;
         let biChartStatusInstance = null;
         let biChartRegiaoInstance = null;
-        let biChartFinanceInstance = null;
-        let biCurrentUser = null;
-        const PREDEFINED_REGIONS = ["APUCARANA", "CAMPO MOURÃO", "CASCAVEL", "CURITIBA", "FOZ DO IGUAÇU", "FRANCISCO BELTRÃO", "GUARAPUAVA", "LONDRINA", "MARINGÁ", "PATO BRANCO", "PONTA GROSSA", "TOLEDO", "UMUARAMA", "UNIÃO DA VITÓRIA"];
+        let biCurrentStatusFilter = 'all';
 
-        function initBiUsers() {
-            const sel = document.getElementById('biLoginRegion');
-            if(sel) {
-                sel.innerHTML = '<option value="">Acesso Geral (Todas as Regiões)</option>';
-                PREDEFINED_REGIONS.forEach(r => sel.innerHTML += `<option value="${r}">${r}</option>`);
-            }
-            tryLoadBiDefault();
-        }
-
-        async function tryLoadBiDefault() {
-            try {
-                // Tenta carregar automaticamente o arquivo Dados Gerais.xlsm
-                const response = await fetch('Dados Gerais.xlsm');
-                if(response.ok) {
-                    const blob = await response.blob();
-                    processBiFile({files: [new File([blob], "Dados Gerais.xlsm")]});
-                }
-            } catch(e) {}
-        }
-
-        function performBiLogin() {
-            const region = document.getElementById('biLoginRegion').value;
-            const password = document.getElementById('biLoginPassword').value;
-
-            if (password === "supervisao2026") {
-                biCurrentUser = { 
-                    name: region ? "Supervisor Regional" : "Gestão Central", 
-                    region: region 
-                };
-                finishBiLogin();
-            } else {
-                alert("Senha de acesso incorreta. Tente novamente.");
-            }
-        }
-
-        function finishBiLogin() {
-            document.getElementById('biDisplayUserName').innerText = biCurrentUser.name;
-            document.getElementById('biDisplayUserRegion').innerText = biCurrentUser.region || "Acesso Geral";
-            const loginPage = document.getElementById('bi-login-page');
-            loginPage.style.display = 'none';
-            document.getElementById('bi-app-container').classList.remove('hidden');
-            document.getElementById('bi-app-container').classList.add('flex');
-            
-            if(biCurrentUser.region) {
-                const filter = document.getElementById('biFilterRegiao');
-                filter.innerHTML = `<option value="${biCurrentUser.region}">${biCurrentUser.region}</option>`;
-                filter.disabled = true;
-                handleBiRegionChange();
-            } else {
-                const filter = document.getElementById('biFilterRegiao');
-                filter.innerHTML = '<option value="">Todas as Regiões</option>';
-                PREDEFINED_REGIONS.forEach(r => filter.innerHTML += `<option value="${r}">${r}</option>`);
-                filter.disabled = false;
-            }
-        }
-
-        function logoutBI() {
-            document.getElementById('bi-app-container').classList.add('hidden');
-            document.getElementById('bi-app-container').classList.remove('flex');
-            document.getElementById('bi-login-page').style.display = 'flex';
-            document.getElementById('biLoginPassword').value = '';
-        }
+        // --- 1. LÓGICA DE ABAS (ESCOPO E FINANCEIRO) ---
 
         function switchBiTab(tabName) {
+            const viewDash = document.getElementById('biViewDashboard');
+            const viewFin = document.getElementById('biViewFinanceiro');
+            
             document.getElementById('biTabQualificacao').classList.remove('active');
             document.getElementById('biTabTecnico').classList.remove('active');
             document.getElementById('biTabFinanceiro').classList.remove('active');
-            
-            const viewDash = document.getElementById('biViewDashboard');
-            const viewFin = document.getElementById('biViewFinanceiro');
 
-            if(tabName === 'financeiro') {
+            if (tabName === 'financeiro') {
                 document.getElementById('biTabFinanceiro').classList.add('active');
                 viewDash.classList.add('hidden');
-                viewFin.classList.remove('hidden'); viewFin.classList.add('flex');
-                updateBiFinancials();
+                viewFin.classList.remove('hidden');
+                viewFin.classList.add('flex');
+                
+                setTimeout(updateBiFinancials, 100);
             } else {
                 biCurrentScope = tabName;
                 if(tabName === 'qualificacao') document.getElementById('biTabQualificacao').classList.add('active');
                 if(tabName === 'tecnico') document.getElementById('biTabTecnico').classList.add('active');
+                
                 viewDash.classList.remove('hidden');
-                viewFin.classList.add('hidden'); viewFin.classList.remove('flex');
+                viewFin.classList.add('hidden');
+                viewFin.classList.remove('flex');
+
+                const daysLabel = biCurrentScope === 'tecnico' ? "120" : "90";
+                const legendEl = document.getElementById('biLegendDelayedText');
+                const kpiEl = document.getElementById('biKpiDelayedText');
+                if(legendEl) legendEl.innerText = `Atrasado (> ${daysLabel} dias)`;
+                if(kpiEl) kpiEl.innerText = `Fora do prazo de ${daysLabel} dias`;
+
+                biCurrentPage = 1;
+                populateBiFilters(); 
                 applyBiFilters();
+            }
+        }
+
+        // --- 2. GESTÃO FINANCEIRA ---
+
+        function updateBiFinancials() {
+            const budget = parseFloat(document.getElementById('biInputBudget').value) || 0;
+            const costPerVisit = parseFloat(document.getElementById('biInputCost').value) || 0;
+
+            let totalPending = 0;
+            let regionStats = {};
+
+            const processList = (list) => {
+                list.forEach(item => {
+                    const isEncerrado = item.fim && parseBiDate(item.fim) < new Date();
+                    if (isEncerrado) return;
+
+                    let pendingForStudent = 0;
+                    item.visits.forEach(v => {
+                        const status = (v.status || "").toLowerCase();
+                        if (!status.includes("realizada") && !status.includes("concluída")) {
+                            pendingForStudent++;
+                        }
+                    });
+
+                    if (pendingForStudent > 0) {
+                        totalPending += pendingForStudent;
+                        const key = item.regiao || item.cidade || "Indefinido";
+                        if (!regionStats[key]) regionStats[key] = 0;
+                        regionStats[key] += pendingForStudent;
+                    }
+                });
+            };
+
+            processList(biDb.qualificacao || []);
+            processList(biDb.tecnico || []);
+
+            const projectedCost = totalPending * costPerVisit;
+            const balance = budget - projectedCost;
+
+            document.getElementById('biFinPendingVisits').innerText = totalPending;
+            document.getElementById('biFinProjectedCost').innerText = formatBiCurrency(projectedCost);
+            
+            const elBalance = document.getElementById('biFinBalance');
+            elBalance.innerText = formatBiCurrency(balance);
+            elBalance.className = `text-4xl font-extrabold mb-2 ${balance >= 0 ? 'text-emerald-600' : 'text-red-600'}`;
+
+            const elBadge = document.getElementById('biFinStatusBadge');
+            if (balance >= 0) {
+                elBadge.innerText = "Orçamento Suficiente";
+                elBadge.className = "px-4 py-1 rounded-full text-xs font-bold uppercase bg-emerald-100 text-emerald-700";
+            } else {
+                elBadge.innerText = "Déficit Orçamentário";
+                elBadge.className = "px-4 py-1 rounded-full text-xs font-bold uppercase bg-red-100 text-red-700";
+            }
+
+            updateBiFinancialChart(budget, projectedCost);
+            updateBiFinancialTable(regionStats, costPerVisit, budget);
+        }
+
+        function formatBiCurrency(val) {
+            return val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        function updateBiFinancialChart(budget, expenses) {
+            const ctx = document.getElementById('biChartFinance');
+            if (!ctx) return;
+            if (biFinancialChart) biFinancialChart.destroy();
+
+            biFinancialChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Orçamento Disponível', 'Gastos Projetados'],
+                    datasets: [{
+                        label: 'Valor (R$)',
+                        data: [budget, expenses],
+                        backgroundColor: ['#10b981', expenses > budget ? '#ef4444' : '#3b82f6'],
+                        borderRadius: 6,
+                        barThickness: 60
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } }
+                }
+            });
+        }
+
+        function updateBiFinancialTable(stats, costPerVisit, totalBudget) {
+            const tbody = document.getElementById('biFinTableBody');
+            tbody.innerHTML = '';
+            const rows = Object.entries(stats).map(([region, visits]) => ({ region, visits, cost: visits * costPerVisit })).sort((a, b) => b.cost - a.cost);
+
+            if (rows.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400 text-xs">Nenhum dado pendente encontrado.</td></tr>`;
+                return;
+            }
+
+            rows.forEach(row => {
+                const percent = totalBudget > 0 ? (row.cost / totalBudget * 100).toFixed(1) : 0;
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50";
+                tr.innerHTML = `
+                    <td class="p-4 font-medium text-slate-700">${row.region}</td>
+                    <td class="p-4 text-center text-slate-600 bg-slate-50">${row.visits}</td>
+                    <td class="p-4 text-right font-bold text-slate-700">${formatBiCurrency(row.cost)}</td>
+                    <td class="p-4 text-center">
+                        <div class="flex items-center gap-2 justify-center">
+                            <div class="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-senac-blue" style="width: ${Math.min(percent, 100)}%"></div>
+                            </div>
+                            <span class="text-[10px] text-slate-500">${percent}%</span>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // --- 3. INICIALIZAÇÃO E LOGIN ---
+
+        function initBiUsers() {
+            try {
+                const stored = localStorage.getItem('senacSupervisors');
+                if (stored && stored !== '[]') { biUsers = JSON.parse(stored); } 
+                else { biUsers = [...DEFAULT_BI_USERS]; localStorage.setItem('senacSupervisors', JSON.stringify(biUsers)); }
+            } catch (e) { biUsers = [...DEFAULT_BI_USERS]; }
+            populateBiLoginRegions();
+        }
+
+        function populateBiLoginRegions() {
+            const loginSel = document.getElementById('biLoginRegion');
+            let options = '';
+            PREDEFINED_REGIONS.forEach(r => { options += `<option value="${r}">${r}</option>`; });
+            if(loginSel) loginSel.innerHTML = '<option value="">Acesso Geral (Todas as Regiões)</option>' + options;
+        }
+
+        function toggleBiLoginMethod() {
+            const region = document.getElementById('biLoginRegion').value;
+            const emailContainer = document.getElementById('biEmailContainer');
+            const passwordContainer = document.getElementById('biPasswordContainer');
+
+            if (region === "") { 
+                emailContainer.classList.add('hidden');
+                passwordContainer.classList.remove('hidden');
+            } else { 
+                emailContainer.classList.remove('hidden');
+                passwordContainer.classList.add('hidden');
+            }
+        }
+
+        function performBiLogin() {
+            const region = document.getElementById('biLoginRegion').value;
+            if (region === "") {
+                const password = document.getElementById('biLoginPassword').value;
+                if (password === "supervisao2026") {
+                    biCurrentUser = { name: "Gestão Central", region: "", email: "admin@senac.br" };
+                    startBiLoadingSequence();
+                } else {
+                    alert("Senha de acesso geral incorreta.");
+                }
+            } else {
+                const email = document.getElementById('biLoginEmail').value.trim().toLowerCase();
+                if (!email) return alert("Por favor, digite seu e-mail.");
+                biCurrentUser = { name: "Supervisor Regional", region: region, email: email };
+                startBiLoadingSequence();
+            }
+        }
+
+        function startBiLoadingSequence() {
+            document.getElementById('biLoginPage').style.display = 'none';
+            document.getElementById('biGlobalLoader').classList.remove('hidden');
+            document.getElementById('biLoadingMessage').innerText = "Validando credenciais e permissões...";
+
+            setTimeout(() => {
+                finishBiLogin();
+            }, 1000);
+        }
+
+        function finishBiLogin() {
+            const displayRegion = biCurrentUser.region || "Acesso Geral";
+            document.getElementById('biDisplayUserName').innerText = biCurrentUser.name;
+            document.getElementById('biDisplayUserRegion').innerText = displayRegion;
+            
+            if (displayRegion !== "Acesso Geral" && displayRegion !== "") {
+                const filterReg = document.getElementById('biFilterRegiao');
+                if (filterReg) {
+                    filterReg.value = displayRegion;
+                    filterReg.disabled = true; 
+                    handleBiRegionChange(); 
+                    document.getElementById('biRegionLockMsg').classList.remove('hidden');
+                }
+            }
+
+            document.getElementById('biLoadingMessage').innerText = "Carregando dados do sistema...";
+            tryLoadBiDefault();
+        }
+
+        function logoutBi() {
+             document.getElementById('biAppContainer').classList.add('hidden');
+             document.getElementById('biAppContainer').classList.remove('flex');
+             document.getElementById('biLoginPage').style.display = 'flex';
+             document.getElementById('biLoginPassword').value = '';
+        }
+
+        function resetBiUsersToDefault() {
+             localStorage.removeItem('senacSupervisors');
+             location.reload();
+        }
+
+        // --- 4. PROCESSAMENTO DE ARQUIVOS (Excel) ---
+
+        async function tryLoadBiDefault() {
+            document.getElementById('biLoadingMessage').innerText = "Buscando arquivos de dados...";
+            
+            const candidates = ["Dados Gerais.xlsm", "Dados Gerais.xlsx", "dados gerais.xlsx"];
+            let fileFound = false;
+
+            for (const filename of candidates) {
+                try {
+                    const response = await fetch(filename);
+                    if (response.ok) {
+                        const blob = await response.blob();
+                        const file = new File([blob], filename);
+                        processBiFile({ files: [file] }); // Chama processamento
+                        fileFound = true;
+                        break; 
+                    }
+                } catch (e) { }
+            }
+
+            if (!fileFound) {
+                finalizeBiLoading();
             }
         }
 
         function processBiFile(input) {
             const file = input.files[0];
             if(!file) return;
-            document.getElementById('biLoadingSpinner').classList.remove('hidden');
+            
+            document.getElementById('biGlobalLoader').classList.remove('hidden');
+            document.getElementById('biLoadingMessage').innerText = `Lendo arquivo: ${file.name}...`;
+
             const reader = new FileReader();
+            
             reader.onload = function(e) {
-                try {
-                    const data = new Uint8Array(e.target.result);
-                    const workbook = XLSX.read(data, {type: 'array'});
-                    
-                    let sheetQ = workbook.SheetNames.find(n => n.includes("Dados Gerais") && !n.includes("Tec"));
-                    let sheetT = workbook.SheetNames.find(n => n.includes("Dados Gerais") && n.includes("Tec"));
-                    if(!sheetQ) sheetQ = workbook.SheetNames[0];
+                setTimeout(() => {
+                    try {
+                        const data = new Uint8Array(e.target.result);
+                        document.getElementById('biLoadingMessage').innerText = "Processando planilhas e fórmulas...";
+                        
+                        const workbook = XLSX.read(data, {type: 'array'});
+                        
+                        let sheetQuali = workbook.SheetNames.find(n => n.trim().toLowerCase() === "dados gerais");
+                        if(!sheetQuali) sheetQuali = workbook.SheetNames.find(n => n.toLowerCase().includes("dados gerais") && !n.toLowerCase().includes("tec"));
+                        let sheetTec = workbook.SheetNames.find(n => n.toLowerCase().includes("dados gerais") && (n.toLowerCase().includes("tec") || n.toLowerCase().includes("téc")));
+                        if(!sheetQuali && !sheetTec) sheetQuali = workbook.SheetNames[0];
 
-                    biDb.qualificacao = sheetQ ? parseBiSheet(workbook.Sheets[sheetQ]) : [];
-                    biDb.tecnico = sheetT ? parseBiSheet(workbook.Sheets[sheetT]) : [];
+                        biDb.qualificacao = [];
+                        biDb.tecnico = [];
 
-                    document.getElementById('biLoadingSpinner').classList.add('hidden');
-                    document.getElementById('biBtnUploadText').innerText = "Atualizado";
-                    switchBiTab(biCurrentScope);
-                } catch(err) {
-                    console.error(err);
-                    document.getElementById('biLoadingSpinner').classList.add('hidden');
-                }
+                        if (sheetQuali) biDb.qualificacao = parseBiSheet(workbook.Sheets[sheetQuali]);
+                        if (sheetTec) biDb.tecnico = parseBiSheet(workbook.Sheets[sheetTec]);
+
+                        document.getElementById('biLoadingMessage').innerText = "Finalizando visualização...";
+                        switchBiTab(biCurrentScope);
+                        
+                        const btnText = document.getElementById('biBtnUploadText');
+                        if(btnText) btnText.innerText = "Atualizado";
+
+                        finalizeBiLoading();
+
+                    } catch(e) {
+                        console.error(e);
+                        alert("Erro ao processar arquivo. Verifique o formato.");
+                        finalizeBiLoading();
+                    }
+                }, 500);
             };
             reader.readAsArrayBuffer(file);
         }
 
-        // LÓGICA ROBUSTA RESTAURADA
-        function parseBiSheet(ws) {
-            const json = XLSX.utils.sheet_to_json(ws, {header: 1, defval: ""});
-            if(json.length < 2) return [];
-            const h = json[0].map(x => String(x).trim().toLowerCase());
+        function finalizeBiLoading() {
+            const loader = document.getElementById('biGlobalLoader');
+            const app = document.getElementById('biAppContainer');
+
+            loader.classList.add('transition-opacity', 'duration-500', 'opacity-0');
             
-            const find = (keys) => {
-                for(let k of keys) {
-                    const idx = h.findIndex(x => x.includes(k.toLowerCase()));
-                    if(idx > -1) return idx;
+            setTimeout(() => {
+                loader.classList.add('hidden');
+                loader.classList.remove('opacity-0'); 
+                
+                app.classList.remove('hidden');
+                app.classList.add('flex');
+                setTimeout(() => {
+                    app.classList.remove('opacity-0');
+                }, 50);
+            }, 500);
+        }
+
+        function parseBiSheet(worksheet) {
+            const json = XLSX.utils.sheet_to_json(worksheet, {header: 1, defval: ""});
+            if(json.length < 2) return [];
+            const headers = json[0].map(h => String(h).trim());
+            const getIdx = (candidates) => {
+                for(let c of candidates) {
+                    const i = headers.findIndex(h => h.toLowerCase().includes(c.toLowerCase()));
+                    if(i > -1) return i;
                 }
                 return -1;
-            };
+            }
 
             const map = {
-                nome: find(["Nome", "Jovem"]),
-                turma: find(["Turma", "Matrícula"]),
-                empresa: find(["Razao", "Empresa"]),
-                cidade: find(["Cidade"]),
-                regiao: find(["Região", "Atuação"]),
-                dtIni: find(["Ini", "Inicio"]),
-                dtFim: find(["Fim", "Termino"]),
-                v1dt: find(["Visita 1", "V1"]),
-                v1st: find(["Status Visita 1"]),
-                v2dt: find(["Visita 2", "V2"]),
-                v2st: find(["Status Visita"]), // Se for header repetido, a lógica abaixo ajusta
-                v3dt: find(["Visita 3", "V3"]),
-                v3st: find(["Status Visita"]) 
+                nome: getIdx(["Apr. Nome", "Nome", "Jovem"]),
+                turma: getIdx(["Turma", "Matrícula"]),
+                curso: getIdx(["Curso", "Nome do Curso"]), 
+                hrTeoria: getIdx(["Teoria Hr Ini", "Horario Teoria"]),
+                hrPratica: getIdx(["Horário do jovem", "Pratica Hr Ini"]),
+                cidade: getIdx(["Emp. Cidade"]),
+                regiao: getIdx(["Atuação Senac", "Região"]),
+                empresa: getIdx(["Razao Social", "Empresa"]),
+                supNome: getIdx(["Sup. Cadastrado", "Supervisor"]),
+                supEmpresa: getIdx(["Sup. na Empresa"]),
+                supCel: getIdx(["Sup Celular", "Contato"]),
+                supEmail: getIdx(["Sup. Email", "Email Supervisor"]), 
+                dtIni: getIdx(["TurDatIni"]),
+                dtFim: getIdx(["TurDatFim"]),
+                v1Dt: getIdx(["Data da Visita 1"]),
+                v1St: getIdx(["Status Visita 1"]),
+                v2Dt: getIdx(["Data da Visita 2"]),
+                v2St: getIdx(["Status Visita"]), 
+                v3Dt: getIdx(["Data da Visita 3"]),
+                v3St: getIdx(["Status Visita"])
             };
 
             return json.slice(1).map((row, i) => {
                 if(!row[map.nome]) return null;
+                const idxV2St = map.v2Dt > -1 ? map.v2Dt + 1 : -1; 
+                const idxV3St = map.v3Dt > -1 ? map.v3Dt + 1 : -1;
                 return {
                     id: i,
-                    nome: row[map.nome],
-                    turma: row[map.turma] || "-",
-                    empresa: row[map.empresa] || "-",
-                    cidade: row[map.cidade] || "-",
+                    nome: String(row[map.nome]).trim(),
+                    turma: String(row[map.turma] || "N/A"),
+                    cidade: row[map.cidade] || "N/A",
                     regiao: row[map.regiao] || "Geral",
-                    inicio: parseDate(row[map.dtIni]),
-                    fim: parseDate(row[map.dtFim]),
+                    empresa: row[map.empresa],
+                    supervisor: {
+                        nome: row[map.supNome] || "Não inf.",
+                        cel: row[map.supCel] || "",
+                        email: row[map.supEmail] || "" 
+                    },
+                    inicio: parseBiDate(row[map.dtIni]),
+                    fim: parseBiDate(row[map.dtFim]),
                     visits: [
-                        {d: parseDate(row[map.v1dt]), s: String(row[map.v1st]||"")},
-                        {d: parseDate(row[map.v2dt]), s: String(row[map.v2st + (map.v2st === map.v1st ? 1 : 0)]||"")},
-                        {d: parseDate(row[map.v3dt]), s: String(row[map.v3st + (map.v3st === map.v1st ? 2 : 0)]||"")}
-                    ]
+                        { date: parseBiDate(row[map.v1Dt]), status: String(row[map.v1St]).trim(), label: "1ª" },
+                        { date: parseBiDate(row[map.v2Dt]), status: String(row[idxV2St] || row[map.v2St]).trim(), label: "2ª" },
+                        { date: parseBiDate(row[map.v3Dt]), status: String(row[idxV3St] || row[map.v3St]).trim(), label: "3ª" }
+                    ],
+                    hrTeoria: formatBiTime(row[map.hrTeoria]),
+                    hrPratica: formatBiTime(row[map.hrPratica])
                 };
             }).filter(x => x);
         }
 
-        function parseDate(v) {
-            if(!v) return null;
-            if(v instanceof Date) return v;
-            if(typeof v === 'number') return new Date(Math.round((v - 25569)*864e5));
+        // --- 5. HELPERS ---
+
+        function parseBiDate(val) {
+            if(!val) return null;
+            if(val instanceof Date) return val;
+            if(typeof val === 'number') {
+                const date = new Date(Math.round((val - 25569)*86400*1000));
+                return new Date(date.getTime() + date.getTimezoneOffset()*60000);
+            }
+            if(typeof val === 'string') {
+                val = val.trim();
+                if(val.match(/^\d{4}-\d{2}-\d{2}$/)) {
+                    const [y,m,d] = val.split('-'); return new Date(y, m-1, d);
+                }
+                if(val.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+                    const [d,m,y] = val.split('/'); return new Date(y, m-1, d);
+                }
+            }
             return null;
         }
 
-        function analyze(item) {
-            const now = new Date();
-            const isClosed = item.fim && item.fim < now;
-            let status = "No Prazo", color = "green";
-            
-            if(isClosed) { status = "Encerrado"; color = "gray"; }
-            else {
-                let done = 0, lastDate = item.inicio;
-                item.visits.forEach(v => {
-                    if(v.s.toLowerCase().includes('realizada')) { done++; if(v.d) lastDate = v.d; }
-                });
-
-                if(done === 3) { status = "Concluído"; color = "blue"; }
-                else if(lastDate) {
-                    const limit = new Date(lastDate);
-                    limit.setDate(limit.getDate() + (biCurrentScope === 'tecnico' ? 120 : 90));
-                    if(now > limit) { status = "Atrasado"; color = "red"; }
-                }
+        function formatBiTime(val) {
+            if (!val) return "";
+            if (typeof val === 'number') {
+                const totalSeconds = Math.round(val * 86400);
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
             }
-            return { ...item, status, color, isClosed };
+            return val;
+        }
+
+        function analyzeBiJovem(jovem) {
+            const isEncerrado = jovem.fim && jovem.fim < new Date();
+            let globalStatus = "No Prazo";
+            let globalColor = "green"; 
+            if (isEncerrado) return { ...jovem, processedVisits: jovem.visits, globalStatus: "Encerrado", globalColor: "gray", isEncerrado };
+
+            let lastReferenceDate = jovem.inicio;
+            let visitsDoneCount = 0;
+            const processedVisits = jovem.visits.map(v => {
+                let state = "pending";
+                const isRealizada = v.status.toLowerCase().includes("realizada");
+                if (isRealizada) {
+                    state = "done";
+                    visitsDoneCount++;
+                    if (v.date) lastReferenceDate = v.date;
+                }
+                return { ...v, state };
+            });
+
+            if (visitsDoneCount === 3) return { ...jovem, processedVisits, globalStatus: "Concluído", globalColor: "blue", isEncerrado };
+            if (!lastReferenceDate) return { ...jovem, processedVisits, globalStatus: "Sem Data Ini", globalColor: "gray", isEncerrado };
+
+            const deadline = new Date(lastReferenceDate);
+            const daysToAdd = biCurrentScope === 'tecnico' ? 120 : 90;
+            deadline.setDate(deadline.getDate() + daysToAdd);
+            
+            if (new Date() > deadline) { globalStatus = "Atrasado"; globalColor = "red"; }
+
+            return { ...jovem, processedVisits, globalStatus, globalColor, isEncerrado };
+        }
+
+        // --- 6. RENDERIZAÇÃO DASHBOARD ---
+
+        function populateBiFilters() {
+            const selReg = document.getElementById('biFilterRegiao');
+            if(!selReg) return;
+
+            const currentData = biDb[biCurrentScope] || [];
+            const fileRegions = [...new Set(currentData.map(i => i.regiao))].filter(Boolean);
+            const allRegions = [...new Set([...PREDEFINED_REGIONS, ...fileRegions])].sort();
+            
+            if (biCurrentUser && biCurrentUser.region) {
+                selReg.innerHTML = `<option value="${biCurrentUser.region}">${biCurrentUser.region}</option>`;
+                selReg.value = biCurrentUser.region;
+                selReg.disabled = true;
+                const lockMsg = document.getElementById('biRegionLockMsg');
+                if(lockMsg) lockMsg.classList.remove('hidden');
+                updateBiCityOptions(biCurrentUser.region); 
+            } else {
+                selReg.innerHTML = '<option value="">Todas as Regiões</option>';
+                allRegions.forEach(r => selReg.innerHTML += `<option value="${r}">${r}</option>`);
+                selReg.disabled = false;
+                const lockMsg = document.getElementById('biRegionLockMsg');
+                if(lockMsg) lockMsg.classList.add('hidden');
+                updateBiCityOptions(""); 
+            }
+        }
+
+        function handleBiRegionChange() {
+            updateBiCityOptions(document.getElementById('biFilterRegiao').value);
+            applyBiFilters();
+        }
+
+        function updateBiCityOptions(region) {
+            const selCid = document.getElementById('biFilterCidade');
+            if(!selCid) return;
+            const currentVal = selCid.value;
+            const currentData = biDb[biCurrentScope] || [];
+
+            const availableCities = [...new Set(
+                currentData
+                    .filter(item => region === "" || item.regiao === region)
+                    .map(item => item.cidade)
+            )].filter(Boolean).sort();
+
+            selCid.innerHTML = '<option value="">Todas as Cidades</option>';
+            availableCities.forEach(c => selCid.innerHTML += `<option value="${c}">${c}</option>`);
+            if (availableCities.includes(currentVal)) selCid.value = currentVal;
+        }
+
+        function filterBiByStatus(status) {
+            biCurrentStatusFilter = status;
+            applyBiFilters();
         }
 
         function applyBiFilters() {
             const search = document.getElementById('biFilterSearch').value.toLowerCase();
             const regiao = document.getElementById('biFilterRegiao').value;
             const cidade = document.getElementById('biFilterCidade').value;
-            
-            biFilteredData = (biDb[biCurrentScope] || []).map(analyze).filter(item => {
-                if(search && !item.nome.toLowerCase().includes(search)) return false;
+            const contractStatus = document.getElementById('biFilterContractStatus').value;
+
+            biFilteredData = (biDb[biCurrentScope] || []).map(analyzeBiJovem).filter(item => {
+                const nameMatch = item.nome && item.nome.toLowerCase().includes(search);
+                const classMatch = item.turma && item.turma.toLowerCase().includes(search);
+                if(search && !nameMatch && !classMatch) return false;
                 if(regiao && item.regiao !== regiao) return false;
                 if(cidade && item.cidade !== cidade) return false;
+                if (contractStatus === 'active' && item.isEncerrado) return false;
+                if (contractStatus === 'closed' && !item.isEncerrado) return false;
+                if(biCurrentStatusFilter === 'atrasado' && item.globalColor !== 'red') return false;
+                if(biCurrentStatusFilter === 'noprazo' && item.globalColor !== 'green' && item.globalColor !== 'blue') return false;
                 return true;
             });
-            updateBiDashboard();
-        }
 
-        function handleBiRegionChange() {
-            const regiao = document.getElementById('biFilterRegiao').value;
-            const cidades = [...new Set((biDb[biCurrentScope]||[]).filter(i => !regiao || i.regiao === regiao).map(i => i.cidade))].sort();
-            const sel = document.getElementById('biFilterCidade');
-            sel.innerHTML = '<option value="">Todas as Cidades</option>';
-            cidades.forEach(c => sel.innerHTML += `<option value="${c}">${c}</option>`);
-            applyBiFilters();
+            updateBiDashboard();
+            renderBiTable();
         }
 
         function updateBiDashboard() {
-            const kpis = { total: biFilteredData.length, atrasados: 0, noprazo: 0 };
-            biFilteredData.forEach(i => {
-                if(i.color === 'red') kpis.atrasados++;
-                else if(['green','blue'].includes(i.color)) kpis.noprazo++;
-            });
-            document.getElementById('biKpiTotal').innerText = kpis.total;
-            document.getElementById('biKpiAtrasados').innerText = kpis.atrasados;
-            document.getElementById('biKpiNoPrazo').innerText = kpis.noprazo;
+            const countEl = document.getElementById('biCountFiltered');
+            if(countEl) countEl.innerText = biFilteredData.length;
             
+            const total = biFilteredData.length;
+            const atrasados = biFilteredData.filter(i => i.globalColor === 'red').length;
+            const noPrazo = biFilteredData.filter(i => i.globalColor === 'green' || i.globalColor === 'blue').length;
+
+            document.getElementById('biKpiTotal').innerText = total;
+            document.getElementById('biKpiAtrasados').innerText = atrasados;
+            document.getElementById('biKpiNoPrazo').innerText = noPrazo;
+
+            const ctxStatus = document.getElementById('biChartStatus');
+            if(ctxStatus) {
+                if(biChartStatusInstance) biChartStatusInstance.destroy();
+                const statusCounts = { 'No Prazo': 0, 'Atrasado': 0, 'Concluído': 0, 'Encerrado': 0 };
+                biFilteredData.forEach(i => {
+                    if(i.globalColor === 'green') statusCounts['No Prazo']++;
+                    else if(i.globalColor === 'red') statusCounts['Atrasado']++;
+                    else if(i.globalColor === 'blue') statusCounts['Concluído']++;
+                    else statusCounts['Encerrado']++;
+                });
+
+                biChartStatusInstance = new Chart(ctxStatus, {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(statusCounts),
+                        datasets: [{
+                            data: Object.values(statusCounts),
+                            backgroundColor: ['#10b981', '#ef4444', '#004587', '#94a3b8'],
+                            borderWidth: 0,
+                            hoverOffset: 10
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, usePointStyle: true, font: {family: 'Inter'} } } } }
+                });
+            }
+
+            const ctxRegiao = document.getElementById('biChartRegiao');
+            if(ctxRegiao) {
+                if(biChartRegiaoInstance) biChartRegiaoInstance.destroy();
+                const counts = {};
+                const isRegiaoSelected = document.getElementById('biFilterRegiao').value !== "";
+                biFilteredData.forEach(i => {
+                    const key = isRegiaoSelected ? i.cidade : i.regiao;
+                    counts[key] = (counts[key] || 0) + 1;
+                });
+                const sorted = Object.entries(counts).sort((a,b) => b[1] - a[1]).slice(0, 5);
+
+                biChartRegiaoInstance = new Chart(ctxRegiao, {
+                    type: 'bar',
+                    data: {
+                        labels: sorted.map(x => x[0]),
+                        datasets: [{
+                            label: 'Jovens',
+                            data: sorted.map(x => x[1]),
+                            backgroundColor: '#004587',
+                            borderRadius: 4
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } }, scales: { x: { grid: {display: false} }, y: { grid: {display: false} } } }
+                });
+            }
+        }
+
+        function changeBiPage(delta) {
+            biCurrentPage += delta;
             renderBiTable();
-            renderBiCharts(kpis);
         }
 
         function renderBiTable() {
             const tbody = document.getElementById('biTableBody');
+            if(!tbody) return;
             tbody.innerHTML = '';
-            if(biFilteredData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-gray-400">Nenhum dado encontrado. Carregue um arquivo Excel.</td></tr>`;
-                return;
-            }
-            biFilteredData.slice(0, 50).forEach(i => {
-                let vHtml = '<div class="flex gap-1 justify-center">';
-                i.visits.forEach((v, idx) => {
-                    let cls = v.s.toLowerCase().includes('realizada') ? 'bg-emerald-500 text-white' : 'bg-slate-200 text-slate-400';
-                    vHtml += `<div class="w-5 h-5 rounded-full ${cls} text-[9px] flex items-center justify-center font-bold" title="${v.s}">${idx+1}</div>`;
-                });
-                vHtml += '</div>';
 
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 border-b border-slate-50">
-                        <td class="p-4">
-                            <div class="font-bold text-slate-700 text-sm">${i.nome}</div>
-                            <div class="text-xs text-slate-400">${i.turma}</div>
-                        </td>
-                        <td class="p-4 text-xs text-slate-600">
-                            ${i.empresa}<br><span class="text-slate-400">${i.cidade}</span>
-                        </td>
-                        <td class="p-4 text-center text-xs text-slate-500">
-                            ${i.inicio ? i.inicio.toLocaleDateString('pt-BR') : '-'}
-                        </td>
-                         <td class="p-4 text-center text-xs text-slate-500">
-                            ${vHtml}
-                        </td>
-                        <td class="p-4 text-center">
-                             <span class="text-[9px] font-bold uppercase px-2 py-0.5 rounded-full ${i.color === 'red' ? 'bg-red-100 text-red-600' : (i.color === 'green' ? 'bg-emerald-100 text-emerald-600' : 'bg-slate-100 text-slate-500')}">
-                                ${i.status}
-                            </span>
-                        </td>
-                    </tr>`;
+            if (biFilteredData.length === 0) {
+                 tbody.innerHTML = `<tr><td colspan="6" class="p-12 text-center text-slate-400">Nenhum registro encontrado.</td></tr>`;
+                 return;
+            }
+            
+            const totalPages = Math.ceil(biFilteredData.length / biItemsPerPage) || 1;
+            if (biCurrentPage > totalPages) biCurrentPage = 1;
+            if (biCurrentPage < 1) biCurrentPage = 1;
+
+            const start = (biCurrentPage - 1) * biItemsPerPage;
+            const end = start + biItemsPerPage;
+            const pageData = biFilteredData.slice(start, end);
+
+            document.getElementById('biPageDisplay').innerText = `${biCurrentPage} / ${totalPages}`;
+            document.getElementById('biBtnPrev').disabled = biCurrentPage === 1;
+            document.getElementById('biBtnNext').disabled = biCurrentPage === totalPages;
+
+            const formatDate = (d) => d ? d.toLocaleDateString('pt-BR') : '-';
+
+            pageData.forEach(item => {
+                let visitsHtml = `<div class="flex gap-4 justify-center">`;
+                item.processedVisits.forEach((v, idx) => {
+                    let color = "bg-slate-200";
+                    if(v.state === 'done') color = "bg-emerald-500 shadow-md shadow-emerald-200";
+                    visitsHtml += `
+                        <div class="flex flex-col items-center group relative cursor-help">
+                            <div class="w-8 h-8 rounded-full ${color} flex items-center justify-center text-white text-xs font-bold border border-white">
+                                ${idx + 1}
+                            </div>
+                        </div>
+                    `;
+                });
+                visitsHtml += `</div>`;
+
+                let badgeClass = "bg-slate-100 text-slate-500";
+                if(item.globalColor === 'green') badgeClass = "bg-emerald-100 text-emerald-700 border border-emerald-200";
+                if(item.globalColor === 'red') badgeClass = "bg-red-100 text-red-700 border border-red-200";
+                if(item.globalColor === 'blue') badgeClass = "bg-blue-100 text-blue-700 border border-blue-200";
+
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 transition-colors border-b border-slate-50";
+                tr.innerHTML = `
+                    <td class="p-4 align-top">
+                        <div class="font-bold text-slate-700 text-sm">${item.nome}</div>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-blue-50 text-blue-600 border border-blue-100">${item.turma}</span>
+                            <span class="text-xs text-slate-400 flex items-center gap-1"><i data-lucide="clock" class="w-3 h-3"></i> ${item.hrTeoria}</span>
+                        </div>
+                    </td>
+                    <td class="p-4 align-top">
+                        <div class="text-xs font-bold text-slate-700 truncate max-w-[150px]" title="${item.empresa}">${item.empresa}</div>
+                        <div class="text-[10px] text-slate-400 mt-0.5 uppercase tracking-wide">${item.cidade}</div>
+                    </td>
+                    <td class="p-4 align-top">
+                        <div class="text-xs text-slate-600">
+                            <div class="font-medium">${item.supervisor.nome}</div>
+                            ${item.supervisor.cel ? `<div class="text-[10px] text-slate-400 flex items-center gap-1 mt-0.5"><i data-lucide="phone" class="w-2.5 h-2.5"></i> ${item.supervisor.cel}</div>` : ''}
+                        </div>
+                    </td>
+                    <td class="p-4 align-top text-center text-xs font-mono text-slate-500">
+                        <div class="text-emerald-600">${formatDate(item.inicio)}</div>
+                        <div class="text-slate-400 border-l h-2 mx-auto my-0.5 w-px"></div>
+                        <div class="${item.isEncerrado ? 'text-red-400 line-through' : ''}">${formatDate(item.fim)}</div>
+                    </td>
+                    <td class="p-4 align-top">
+                        ${visitsHtml}
+                    </td>
+                    <td class="p-4 align-top text-center">
+                        <span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${badgeClass}">
+                            ${item.globalStatus}
+                        </span>
+                    </td>
+                `;
+                tbody.appendChild(tr);
             });
-        }
-
-        function renderBiCharts(kpis) {
-            const ctxStatus = document.getElementById('biChartStatus');
-            if(ctxStatus) {
-                if(biChartStatusInstance) biChartStatusInstance.destroy();
-                biChartStatusInstance = new Chart(ctxStatus, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['No Prazo', 'Atrasado', 'Outros'],
-                        datasets: [{ data: [kpis.noprazo, kpis.atrasados, kpis.total - kpis.noprazo - kpis.atrasados], backgroundColor: ['#10b981', '#ef4444', '#94a3b8'], borderWidth: 0 }]
-                    },
-                    options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { display: false } } }
-                });
-            }
-            const ctxReg = document.getElementById('biChartRegiao');
-            if(ctxReg) {
-                if(biChartRegiaoInstance) biChartRegiaoInstance.destroy();
-                const count = {};
-                biFilteredData.forEach(i => count[i.cidade] = (count[i.cidade]||0)+1);
-                const sorted = Object.entries(count).sort((a,b) => b[1]-a[1]).slice(0,5);
-                
-                biChartRegiaoInstance = new Chart(ctxReg, {
-                    type: 'bar',
-                    data: { labels: sorted.map(x=>x[0]), datasets: [{ label: 'Jovens', data: sorted.map(x=>x[1]), backgroundColor: '#004587' }] },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, indexAxis: 'y' }
-                });
-            }
-        }
-
-        function updateBiFinancials() {
-            const budget = parseFloat(document.getElementById('biInputBudget').value) || 0;
-            const cost = parseFloat(document.getElementById('biInputCost').value) || 0;
-            
-            let pending = 0;
-            [biDb.qualificacao, biDb.tecnico].forEach(list => {
-                list.forEach(i => {
-                     // Analise manual para contagem financeira
-                     const obj = analyze(i);
-                     if(obj.isClosed) return;
-                     obj.visits.forEach(v => { if(!v.s.toLowerCase().includes('realizada')) pending++; });
-                });
-            });
-
-            const projected = pending * cost;
-            const balance = budget - projected;
-            
-            document.getElementById('biFinPendingVisits').innerText = pending;
-            document.getElementById('biFinProjectedCost').innerText = "R$ " + projected.toFixed(2);
-            document.getElementById('biFinBalance').innerText = "R$ " + balance.toFixed(2);
-            
-            const badge = document.getElementById('biFinStatusBadge');
-            if(balance >= 0) { badge.innerText = "Positivo"; badge.className = "px-4 py-1 rounded-full text-xs font-bold uppercase bg-emerald-100 text-emerald-700 inline-block"; }
-            else { badge.innerText = "Negativo"; badge.className = "px-4 py-1 rounded-full text-xs font-bold uppercase bg-red-100 text-red-700 inline-block"; }
-            
-            const ctx = document.getElementById('biChartFinance');
-            if(ctx) {
-                if(biChartFinanceInstance) biChartFinanceInstance.destroy();
-                biChartFinanceInstance = new Chart(ctx, {
-                    type: 'bar',
-                    data: { labels: ['Orçamento', 'Projetado'], datasets: [{ data: [budget, projected], backgroundColor: ['#10b981', balance >=0 ? '#3b82f6' : '#ef4444'] }] },
-                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
-                });
-            }
+            if(typeof lucide !== 'undefined') lucide.createIcons();
         }
 
         function exportBiReport() {
-            const ws = XLSX.utils.json_to_sheet(biFilteredData);
+            if (biFilteredData.length === 0) return alert("Nenhum dado para exportar.");
+            const formatDate = (d) => d ? d.toLocaleDateString('pt-BR') : '-';
+            const exportData = [[
+                "Nome do Jovem", "Turma", "Curso", "Horário", "Empresa", "Cidade", "Região",
+                "Supervisor Senac", "Supervisor Empresa", "Celular Sup", "Email Sup", 
+                "Data Início", "Data Fim", 
+                "Status Geral"
+            ]];
+            biFilteredData.forEach(item => {
+                exportData.push([
+                    item.nome, item.turma, item.curso, item.hrTeoria, item.empresa, item.cidade, item.regiao,
+                    item.supervisor.nome, item.supervisor.empresa, item.supervisor.cel, item.supervisor.email,
+                    formatDate(item.inicio), formatDate(item.fim),
+                    item.globalStatus
+                ]);
+            });
+            const ws = XLSX.utils.aoa_to_sheet(exportData);
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Relatorio");
-            XLSX.writeFile(wb, "Relatorio_BI.xlsx");
+            XLSX.utils.book_append_sheet(wb, ws, `Relatorio_${biCurrentScope}`);
+            XLSX.writeFile(wb, `Relatorio_Senac_${biCurrentScope}.xlsx`);
+        }
+
+        // ==========================================
+        // NOVA FUNÇÃO: CONEXÃO GEMINI (ASSÍNCRONA)
+        // ==========================================
+        async function conectarGemini() {
+            const apiKeyInput = document.getElementById('geminiApiKey');
+            const statusText = document.getElementById('geminiStatus');
+            const apiKey = apiKeyInput.value.trim();
+
+            if (!apiKey) {
+                statusText.innerText = "Por favor, insira uma API Key.";
+                statusText.className = "text-[10px] text-red-500 mt-2 text-center font-bold";
+                return;
+            }
+
+            statusText.innerText = "Conectando...";
+            statusText.className = "text-[10px] text-blue-500 mt-2 text-center";
+
+            try {
+                if (window.GoogleGenerativeAI) {
+                    const genAI = new window.GoogleGenerativeAI(apiKey);
+                    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+                    
+                    // Teste simples
+                    const prompt = "Diga 'Conexão estabelecida com sucesso' em português.";
+                    const result = await model.generateContent(prompt);
+                    const response = await result.response;
+                    const text = response.text();
+
+                    statusText.innerText = "Conectado! " + text;
+                    statusText.className = "text-[10px] text-emerald-600 mt-2 text-center font-bold";
+                } else {
+                    throw new Error("Biblioteca Gemini não carregada.");
+                }
+            } catch (error) {
+                console.error(error);
+                statusText.innerText = "Erro ao conectar. Verifique a chave.";
+                statusText.className = "text-[10px] text-red-500 mt-2 text-center font-bold";
+            }
         }
     </script>
 </body>
